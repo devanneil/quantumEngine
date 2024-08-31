@@ -1,5 +1,6 @@
 #include<iostream>
 #include"core/lib/qVec/qVec.h"
+#include"core/lib/qMat/qMat.h"
 
 using namespace std;
 int main() {

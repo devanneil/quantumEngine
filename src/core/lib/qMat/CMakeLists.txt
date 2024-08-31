@@ -1,6 +1,6 @@
 add_library(qMat STATIC qMat.cpp)
 
-add_subdirectory(../qVec)
+include_directories(${PROJECT_SOURCE_DIR}/core/lib/qVec)
 
 target_link_libraries(qMat qVec)
 

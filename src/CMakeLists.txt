@@ -8,5 +8,7 @@ set(CMAKE_VERBOSE_MAKEFILE OFF)
 add_executable(qVecTest main.cpp)
 
 add_subdirectory(core/lib/qVec)
+add_subdirectory(core/lib/qMat)
 
 target_link_libraries(qVecTest qVec)
+target_link_libraries(qVecTest qMat)
