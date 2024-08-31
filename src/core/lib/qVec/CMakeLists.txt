@@ -1,4 +1,4 @@
-add_library(qVec qVec.cpp)
+add_library(qVec STATIC qVec.cpp)
 
 target_include_directories(qVec 
     PUBLIC
