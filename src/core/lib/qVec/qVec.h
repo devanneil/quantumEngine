@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <ostream>
 
-template <class T>
+template <typename T>
 class qVec {
     private:
         T* values;
