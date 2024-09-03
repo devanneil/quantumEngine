@@ -10,3 +10,13 @@ template<typename T>
 qMat<T>::qMat(int n, int m, qVec<T>[], int arrSize) {
 
 }
+
+template<typename T>
+qMat<T>::qMat(int n, int m) {
+
+}
+
+template<typename T>
+qMat<T>::~qMat() {
+    
+}
