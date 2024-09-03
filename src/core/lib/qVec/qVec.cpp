@@ -110,6 +110,31 @@ qVec<T>::qVec(int size) {
     }
 }
 /**
+ * @brief Constructs a qVec object from a std::vector<T>.
+ * 
+ * This constructor initializes the qVec object with the contents of the provided
+ * std::vector<T>. It allocates memory for the `values` array based on the size
+ * of the input vector and copies the elements from the vector to the newly
+ * allocated array.
+ * 
+ * @tparam T The type of the elements in the qVec.
+ * @param vec A std::vector<T> whose elements are copied to initialize the qVec.
+ */
+template <typename T>
+qVec<T>::qVec(std::vector<T> vec) {
+    // Set the size of the qVec to match the size of the input vector
+    this->size = vec.size();
+    
+    // Allocate memory for the values array to hold elements of type T
+    // This creates an array of type T with 'size' elements.
+    this->values = new T[this->size];
+    
+    // Copy each element from the input vector to the values array
+    for(size_t i = 0; i < vec.size(); i++) {
+        this->values[i] = vec[i];
+    }
+}
+/**
  * @brief Destructor for the qVec class.
  * 
  * This destructor cleans up the dynamically allocated memory used by the qVec object.
@@ -190,7 +215,26 @@ void qVec<T>::setValue(int ind, const T& value) {
         throw std::out_of_range("Index is out of bounds"); // Index is out of range, throw exception
     }
 }
-
+/**
+ * @brief Converts the qVec object to a std::vector<T>.
+ * 
+ * This member function creates and returns a std::vector<T> containing the
+ * elements of the qVec object. The vector is initialized with the values stored
+ * in the qVec's `values` array.
+ * 
+ * @tparam T The type of the elements in the qVec.
+ * @return A std::vector<T> containing the elements from the qVec object.
+ * 
+ * Note: The function returns a newly created std::vector<T> which is a copy of
+ *       the `values` array. Ensure that the `values` array is correctly managed
+ *       and valid during the lifetime of the returned vector.
+ */
+template <typename T>
+std::vector<T> qVec<T>::getVector() {
+    // Create and return a std::vector<T> initialized with the elements from the `values` array
+    // This operation copies the elements from `values` to the new vector.
+    return std::vector<T>(this->values, this->size);
+}
 // Copy assignment operator
 template <typename T>
 qVec<T>& qVec<T>::operator=(const qVec<T>& src) {

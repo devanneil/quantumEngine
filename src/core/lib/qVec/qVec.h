@@ -3,7 +3,7 @@
 
 #include <stdexcept>
 #include <ostream>
-
+#include <vector>
 template <typename T>
 class qVec {
     private:
@@ -14,6 +14,8 @@ class qVec {
     public:
         qVec(int size, T values[], int tSize);
         qVec(int size);
+        qVec(const std::vector<T> vec);
+
         qVec(const qVec<T>& src);
         ~qVec();
 
@@ -23,6 +25,8 @@ class qVec {
         T getValue(int ind) const;
         void setValue(int ind, const T& value);
 
+        std::vector<T> getVector();
+        
         qVec<T>& operator=(const qVec<T>& src);
         qVec<T>& operator=(qVec<T>&& src) noexcept;
         bool operator==(const qVec<T>& other) const;
