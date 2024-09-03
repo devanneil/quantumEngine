@@ -1,4 +1,5 @@
 #include <memory>
+#include <../qVec/qVec.h>
 #ifndef Q_MAT
 #define Q_Mat
 
@@ -10,7 +11,7 @@ class qMat {
     int mSize;
 
     public:
-    qMat(int n, int m, &qVec<T>[], int arrSize);
+    qMat(int n, int m, qVec<T>[], int arrSize);
     qMat(int n, int m);
     ~qMat();
 };
