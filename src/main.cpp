@@ -6,8 +6,8 @@ using namespace std;
 int main() {
     //TODO: Test qVec
     qVec<int> testVec = qVec<int>({2, 3, 4});
-    qVec<int> testVec2 = qVec<int>({5, 6, 6});
-    qVec<int> outVec = testVec * 3;
-    cout << outVec << endl;
+    qVec<double> testVec2 = qVec<double>({5.0, 6.0, 6.0});
+    //qVec<int> outVec = testVec.dot(testVec2);
+    cout << testVec.cross(testVec2) << endl;
     return 0;
 }

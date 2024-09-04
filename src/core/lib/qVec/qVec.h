@@ -27,11 +27,13 @@ class qVec {
 
         template<typename H> T dot(const qVec<H>& mult) const;
         template<typename H> qVec<T> cross(const qVec<H>& mult) const;
-        
+        template<typename H> qVec<T> scale(const H scal) const;
+        template<typename H> qVec<T> add(const qVec<H>& addend) const;
         template<typename H> qVec<T> operator*(const H mult) const;
-
+        template<typename H> qVec<T> operator+(const qVec<H>& addend) const;
+        template<typename H> qVec<T> operator-(const qVec<H>& subtrahend) const {return this.add(-1 * subtrahend);};
+        template<typename H> qVec<T> operator/(const qVec<H>& divident) const {return this.scale(1 / divident);};
         template<typename H>qVec<T>& operator=(const qVec<H>& src);
-        template<typename H>qVec<T>& operator=(qVec<H>&& src) noexcept;
         template<typename H>bool operator==(const qVec<H>& other) const;
         friend std::ostream& operator<<(std::ostream& os, const qVec<T>& vec) {
             os << "["; // Start of vector representation

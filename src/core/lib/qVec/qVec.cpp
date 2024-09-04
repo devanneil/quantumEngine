@@ -12,33 +12,134 @@ template int* qVec<int>::valueOf();
 template int qVec<int>::getValue(int ind) const;
 template void qVec<int>::setValue(int ind, const int& value);
 template int qVec<int>::dot(const qVec<int>& mult) const;
+template int qVec<int>::dot(const qVec<double>& mult) const;
+template int qVec<int>::dot(const qVec<long>& mult) const;
+template int qVec<int>::dot(const qVec<float>& mult) const;
 template qVec<int> qVec<int>::cross(const qVec<int>& mult) const;
+template qVec<int> qVec<int>::cross(const qVec<double>& mult) const;
+template qVec<int> qVec<int>::cross(const qVec<long>& mult) const;
+template qVec<int> qVec<int>::cross(const qVec<float>& mult) const;
+template qVec<int> qVec<int>::scale(const int) const;
+template qVec<int> qVec<int>::scale(const double) const;
+template qVec<int> qVec<int>::scale(const long) const;
+template qVec<int> qVec<int>::scale(const float) const;
+template qVec<int> qVec<int>::add(const qVec<int>& addend) const;
+template qVec<int> qVec<int>::add(const qVec<double>& addend) const;
+template qVec<int> qVec<int>::add(const qVec<long>& addend) const;
+template qVec<int> qVec<int>::add(const qVec<float>& addend) const;
 template qVec<int> qVec<int>::operator*(const int) const;
+template qVec<int> qVec<int>::operator*(const double) const;
+template qVec<int> qVec<int>::operator*(const long) const;
+template qVec<int> qVec<int>::operator*(const float) const;
+template qVec<int> qVec<int>::operator+(const qVec<int>& addend) const;
+template qVec<int> qVec<int>::operator+(const qVec<double>& addend) const;
+template qVec<int> qVec<int>::operator+(const qVec<long>& addend) const;
+template qVec<int> qVec<int>::operator+(const qVec<float>& addend) const;
 
 // Double
 template qVec<double>::qVec(int size, double values[], int tSize);
 template qVec<double>::qVec(int size);
+template qVec<double>::qVec(const qVec<double>& src);
+template qVec<double>::qVec(std::initializer_list<double> values);
 template qVec<double>::~qVec();
 template int qVec<double>::getSize() const;
 template double* qVec<double>::valueOf();
 template double qVec<double>::getValue(int ind) const;
 template void qVec<double>::setValue(int ind, const double& value);
+template double qVec<double>::dot(const qVec<int>& mult) const;
+template double qVec<double>::dot(const qVec<double>& mult) const;
+template double qVec<double>::dot(const qVec<long>& mult) const;
+template double qVec<double>::dot(const qVec<float>& mult) const;
+template qVec<double> qVec<double>::cross(const qVec<int>& mult) const;
+template qVec<double> qVec<double>::cross(const qVec<double>& mult) const;
+template qVec<double> qVec<double>::cross(const qVec<long>& mult) const;
+template qVec<double> qVec<double>::cross(const qVec<float>& mult) const;
+template qVec<double> qVec<double>::scale(const int) const;
+template qVec<double> qVec<double>::scale(const double) const;
+template qVec<double> qVec<double>::scale(const long) const;
+template qVec<double> qVec<double>::scale(const float) const;
+template qVec<double> qVec<double>::add(const qVec<int>& addend) const;
+template qVec<double> qVec<double>::add(const qVec<double>& addend) const;
+template qVec<double> qVec<double>::add(const qVec<long>& addend) const;
+template qVec<double> qVec<double>::add(const qVec<float>& addend) const;
+template qVec<double> qVec<double>::operator*(const int) const;
+template qVec<double> qVec<double>::operator*(const double) const;
+template qVec<double> qVec<double>::operator*(const long) const;
+template qVec<double> qVec<double>::operator*(const float) const;
+template qVec<double> qVec<double>::operator+(const qVec<int>& addend) const;
+template qVec<double> qVec<double>::operator+(const qVec<double>& addend) const;
+template qVec<double> qVec<double>::operator+(const qVec<long>& addend) const;
+template qVec<double> qVec<double>::operator+(const qVec<float>& addend) const;
 
 // Long
 template qVec<long>::qVec(int size, long values[], int tSize);
 template qVec<long>::qVec(int size);
+template qVec<long>::qVec(const qVec<long>& src);
+template qVec<long>::qVec(std::initializer_list<long> values);
 template qVec<long>::~qVec();
 template int qVec<long>::getSize() const;
 template long* qVec<long>::valueOf();
 template long qVec<long>::getValue(int ind) const;
 template void qVec<long>::setValue(int ind, const long& value);
+template long qVec<long>::dot(const qVec<int>& mult) const;
+template long qVec<long>::dot(const qVec<double>& mult) const;
+template long qVec<long>::dot(const qVec<long>& mult) const;
+template long qVec<long>::dot(const qVec<float>& mult) const;
+template qVec<long> qVec<long>::cross(const qVec<int>& mult) const;
+template qVec<long> qVec<long>::cross(const qVec<double>& mult) const;
+template qVec<long> qVec<long>::cross(const qVec<long>& mult) const;
+template qVec<long> qVec<long>::cross(const qVec<float>& mult) const;
+template qVec<long> qVec<long>::scale(const int) const;
+template qVec<long> qVec<long>::scale(const double) const;
+template qVec<long> qVec<long>::scale(const long) const;
+template qVec<long> qVec<long>::scale(const float) const;
+template qVec<long> qVec<long>::add(const qVec<int>& addend) const;
+template qVec<long> qVec<long>::add(const qVec<double>& addend) const;
+template qVec<long> qVec<long>::add(const qVec<long>& addend) const;
+template qVec<long> qVec<long>::add(const qVec<float>& addend) const;
+template qVec<long> qVec<long>::operator*(const int) const;
+template qVec<long> qVec<long>::operator*(const double) const;
+template qVec<long> qVec<long>::operator*(const long) const;
+template qVec<long> qVec<long>::operator*(const float) const;
+template qVec<long> qVec<long>::operator+(const qVec<int>& addend) const;
+template qVec<long> qVec<long>::operator+(const qVec<double>& addend) const;
+template qVec<long> qVec<long>::operator+(const qVec<long>& addend) const;
+template qVec<long> qVec<long>::operator+(const qVec<float>& addend) const;
 
 // Float
 template qVec<float>::qVec(int size, float values[], int tSize);
 template qVec<float>::qVec(int size);
+template qVec<float>::qVec(const qVec<float>& src);
+template qVec<float>::qVec(std::initializer_list<float> values);
 template qVec<float>::~qVec();
 template int qVec<float>::getSize() const;
 template float* qVec<float>::valueOf();
+template float qVec<float>::getValue(int ind) const;
+template void qVec<float>::setValue(int ind, const float& value);
+template float qVec<float>::dot(const qVec<int>& mult) const;
+template float qVec<float>::dot(const qVec<double>& mult) const;
+template float qVec<float>::dot(const qVec<long>& mult) const;
+template float qVec<float>::dot(const qVec<float>& mult) const;
+template qVec<float> qVec<float>::cross(const qVec<int>& mult) const;
+template qVec<float> qVec<float>::cross(const qVec<double>& mult) const;
+template qVec<float> qVec<float>::cross(const qVec<long>& mult) const;
+template qVec<float> qVec<float>::cross(const qVec<float>& mult) const;
+template qVec<float> qVec<float>::scale(const int) const;
+template qVec<float> qVec<float>::scale(const double) const;
+template qVec<float> qVec<float>::scale(const long) const;
+template qVec<float> qVec<float>::scale(const float) const;
+template qVec<float> qVec<float>::add(const qVec<int>& addend) const;
+template qVec<float> qVec<float>::add(const qVec<double>& addend) const;
+template qVec<float> qVec<float>::add(const qVec<long>& addend) const;
+template qVec<float> qVec<float>::add(const qVec<float>& addend) const;
+template qVec<float> qVec<float>::operator*(const int) const;
+template qVec<float> qVec<float>::operator*(const double) const;
+template qVec<float> qVec<float>::operator*(const long) const;
+template qVec<float> qVec<float>::operator*(const float) const;
+template qVec<float> qVec<float>::operator+(const qVec<int>& addend) const;
+template qVec<float> qVec<float>::operator+(const qVec<double>& addend) const;
+template qVec<float> qVec<float>::operator+(const qVec<long>& addend) const;
+template qVec<float> qVec<float>::operator+(const qVec<float>& addend) const;
 
 
 /**
@@ -203,11 +304,22 @@ void qVec<T>::setValue(int ind, const T& value) {
         throw std::out_of_range("Index is out of bounds"); // Index is out of range, throw exception
     }
 }
+/**
+ * @brief Computes the dot product of the current vector with another vector.
+ * 
+ * The dot product is calculated as the sum of the products of the corresponding elements of the two vectors.
+ * If the vectors are of different sizes, the function uses the size of the smaller vector.
+ * 
+ * @tparam T The type of the elements in the current qVec.
+ * @tparam H The type of the elements in the other qVec.
+ * @param mult A constant reference to another qVec object of potentially different type H.
+ * @return The dot product as a scalar of type T.
+ */
 template <typename T>
 template <typename H>
 T qVec<T>::dot(const qVec<H>& mult) const {
     int i = 0;
-    int sum = 0;
+    T sum = 0;
     for(i = 0; i < mult.getSize(); i++){
         if(i < this->size) {
             sum += this->values[i] * mult.getValue(i);
@@ -215,6 +327,19 @@ T qVec<T>::dot(const qVec<H>& mult) const {
     }
     return sum;
 }
+
+/**
+ * @brief Computes the cross product of the current vector with another vector.
+ * 
+ * The cross product is defined only for 3-dimensional vectors. It results in a new vector that is perpendicular
+ * to both of the input vectors. An exception is thrown if either of the vectors is not 3-dimensional.
+ * 
+ * @tparam T The type of the elements in the current qVec.
+ * @tparam H The type of the elements in the other qVec.
+ * @param other A constant reference to another qVec object of potentially different type H.
+ * @return A new qVec object of type T, representing the cross product of the two vectors.
+ * @throws std::out_of_range if either vector is not of size 3.
+ */
 template <typename T>
 template <typename H>
 qVec<T> qVec<T>::cross(const qVec<H>& other) const {
@@ -230,15 +355,81 @@ qVec<T> qVec<T>::cross(const qVec<H>& other) const {
 
     return result;
 }
-template <typename T>
-template <typename H>
-qVec<T> qVec<T>::operator*(const H mult) const{
+
+/**
+ * @brief Scales the current vector by a given scalar value.
+ * 
+ * The resulting vector is a scaled version of the original vector, where each component is multiplied
+ * by the scalar value.
+ * 
+ * @tparam T The type of the elements in the current qVec.
+ * @tparam H The type of the scalar value.
+ * @param scale The scalar value of type H by which the vector will be scaled.
+ * @return A new qVec object of type T, representing the scaled vector.
+ */
+template<typename T>
+template<typename H> 
+qVec<T> qVec<T>::scale(const H scale) const {
     qVec<T> newVec = qVec<T>(*this);
     for(size_t i = 0; i < newVec.getSize(); i++) {
-        newVec[i] = this->getValue(i) * mult;
+        newVec[i] = this->getValue(i) * scale;
     }
     return newVec;
 }
+
+/**
+ * @brief Multiplies the current vector by a scalar value using operator overloading.
+ * 
+ * This is a shorthand for the scale function, where the scalar value is provided as an argument.
+ * 
+ * @tparam T The type of the elements in the current qVec.
+ * @tparam H The type of the scalar value.
+ * @param mult The scalar value of type H by which the vector will be multiplied.
+ * @return A new qVec object of type T, representing the scaled vector.
+ */
+template <typename T>
+template <typename H>
+qVec<T> qVec<T>::operator*(const H mult) const{
+    return this->scale(mult);
+}
+
+/**
+ * @brief Adds another vector to the current vector.
+ * 
+ * The resulting vector is the sum of the two vectors, where each component of the resulting vector
+ * is the sum of the corresponding components of the input vectors.
+ * 
+ * @tparam T The type of the elements in the current qVec.
+ * @tparam H The type of the elements in the other qVec.
+ * @param addend A constant reference to another qVec object of potentially different type H to be added.
+ * @return A new qVec object of type T, representing the sum of the two vectors.
+ */
+template <typename T>
+template <typename H>
+qVec<T> qVec<T>::add(const qVec<H>& addend) const {
+    qVec<T> newVec = qVec<T>(*this);
+    for(size_t i = 0; i < newVec.getSize(); i++) {
+        newVec.values[i] += addend.getValue(i);
+    }
+    return newVec;
+}
+
+/**
+ * @brief Adds another vector to the current vector using operator overloading.
+ * 
+ * This is a shorthand for the add function, where the vector to be added is provided as an argument.
+ * 
+ * @tparam T The type of the elements in the current qVec.
+ * @tparam H The type of the elements in the other qVec.
+ * @param addend A constant reference to another qVec object of potentially different type H to be added.
+ * @return A new qVec object of type T, representing the sum of the two vectors.
+ */
+template <typename T>
+template <typename H>
+qVec<T> qVec<T>::operator+(const qVec<H>& addend) const {
+    return this->add(addend);
+}
+
 // Copy assignment operator
 template <typename T>
 template <typename H>
@@ -253,21 +444,6 @@ qVec<T>& qVec<T>::operator=(const qVec<H>& src) {
     }
     return *this; // Return the current object to allow chaining of assignment operations
 }
-
-// Move assignment operator
-template <typename T>
-template <typename H>
-qVec<T>& qVec<T>::operator=(qVec<H>&& src) noexcept {
-    if (this != &src) { // Avoid self-assignment
-        delete[] values; // Free the current resources
-        size = src.size; // Transfer ownership of the source vector's resources
-        values = src.values; // Move the source vector's resources to the current vector
-        src.size = 0; // Set the source vector's size to 0
-        src.values = nullptr; // Set the source vector's pointer to null to avoid double deletion
-    }
-    return *this; // Return the current object to allow chaining of assignment operations
-}
-
 // Equality operator
 template <typename T>
 template <typename H>
