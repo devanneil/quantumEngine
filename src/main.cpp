@@ -4,6 +4,10 @@
 
 using namespace std;
 int main() {
-    //TODO: Test qVec(std::vector) and qVec.getVector() then format qVec to only get those if vector is included
+    //TODO: Test qVec
+    qVec<int> testVec = qVec<int>({2, 3, 4});
+    qVec<int> testVec2 = qVec<int>({5, 6, 6});
+    qVec<int> outVec = testVec * 3;
+    cout << outVec << endl;
     return 0;
 }

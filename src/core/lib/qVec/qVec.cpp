@@ -5,11 +5,15 @@
 template qVec<int>::qVec(int size, int values[], int tSize);
 template qVec<int>::qVec(int size);
 template qVec<int>::qVec(const qVec<int>& src);
+template qVec<int>::qVec(std::initializer_list<int> values);
 template qVec<int>::~qVec();
 template int qVec<int>::getSize() const;
 template int* qVec<int>::valueOf();
 template int qVec<int>::getValue(int ind) const;
 template void qVec<int>::setValue(int ind, const int& value);
+template int qVec<int>::dot(const qVec<int>& mult) const;
+template qVec<int> qVec<int>::cross(const qVec<int>& mult) const;
+template qVec<int> qVec<int>::operator*(const int) const;
 
 // Double
 template qVec<double>::qVec(int size, double values[], int tSize);
@@ -35,7 +39,6 @@ template qVec<float>::qVec(int size);
 template qVec<float>::~qVec();
 template int qVec<float>::getSize() const;
 template float* qVec<float>::valueOf();
-
 
 
 /**
@@ -109,29 +112,14 @@ qVec<T>::qVec(int size) {
         values[i] = 0;
     }
 }
-/**
- * @brief Constructs a qVec object from a std::vector<T>.
- * 
- * This constructor initializes the qVec object with the contents of the provided
- * std::vector<T>. It allocates memory for the `values` array based on the size
- * of the input vector and copies the elements from the vector to the newly
- * allocated array.
- * 
- * @tparam T The type of the elements in the qVec.
- * @param vec A std::vector<T> whose elements are copied to initialize the qVec.
- */
-template <typename T>
-qVec<T>::qVec(std::vector<T> vec) {
-    // Set the size of the qVec to match the size of the input vector
-    this->size = vec.size();
-    
-    // Allocate memory for the values array to hold elements of type T
-    // This creates an array of type T with 'size' elements.
+template<typename T>
+qVec<T>::qVec(std::initializer_list<T> list) {
+    this->size = list.size();
     this->values = new T[this->size];
-    
-    // Copy each element from the input vector to the values array
-    for(size_t i = 0; i < vec.size(); i++) {
-        this->values[i] = vec[i];
+    size_t i = 0;
+    for (auto value : list) {
+        if (i >= size) break;
+        values[i++] = value;
     }
 }
 /**
@@ -215,29 +203,46 @@ void qVec<T>::setValue(int ind, const T& value) {
         throw std::out_of_range("Index is out of bounds"); // Index is out of range, throw exception
     }
 }
-/**
- * @brief Converts the qVec object to a std::vector<T>.
- * 
- * This member function creates and returns a std::vector<T> containing the
- * elements of the qVec object. The vector is initialized with the values stored
- * in the qVec's `values` array.
- * 
- * @tparam T The type of the elements in the qVec.
- * @return A std::vector<T> containing the elements from the qVec object.
- * 
- * Note: The function returns a newly created std::vector<T> which is a copy of
- *       the `values` array. Ensure that the `values` array is correctly managed
- *       and valid during the lifetime of the returned vector.
- */
 template <typename T>
-std::vector<T> qVec<T>::getVector() {
-    // Create and return a std::vector<T> initialized with the elements from the `values` array
-    // This operation copies the elements from `values` to the new vector.
-    return std::vector<T>(this->values, this->size);
+template <typename H>
+T qVec<T>::dot(const qVec<H>& mult) const {
+    int i = 0;
+    int sum = 0;
+    for(i = 0; i < mult.getSize(); i++){
+        if(i < this->size) {
+            sum += this->values[i] * mult.getValue(i);
+        } else break;
+    }
+    return sum;
+}
+template <typename T>
+template <typename H>
+qVec<T> qVec<T>::cross(const qVec<H>& other) const {
+    if (this->size != 3 || other.getSize() != 3) {
+        throw std::out_of_range("Both vectors must be of size 3 for cross product.");
+    }
+
+    qVec<T> result(3); // Create a new vector of size 3 to store the result
+
+    result[0] = this->values[1] * other[2] - this->values[2] * other[1];
+    result[1] = this->values[2] * other[0] - this->values[0] * other[2];
+    result[2] = this->values[0] * other[1] - this->values[1] * other[0];
+
+    return result;
+}
+template <typename T>
+template <typename H>
+qVec<T> qVec<T>::operator*(const H mult) const{
+    qVec<T> newVec = qVec<T>(*this);
+    for(size_t i = 0; i < newVec.getSize(); i++) {
+        newVec[i] = this->getValue(i) * mult;
+    }
+    return newVec;
 }
 // Copy assignment operator
 template <typename T>
-qVec<T>& qVec<T>::operator=(const qVec<T>& src) {
+template <typename H>
+qVec<T>& qVec<T>::operator=(const qVec<H>& src) {
     if (this != &src) {  // Avoid self-assignment by checking if the object is being assigned to itself
         delete[] values; // Free the currently allocated memory to prevent memory leaks
         size = src.size; // Copy the size of the source vector
@@ -251,7 +256,8 @@ qVec<T>& qVec<T>::operator=(const qVec<T>& src) {
 
 // Move assignment operator
 template <typename T>
-qVec<T>& qVec<T>::operator=(qVec<T>&& src) noexcept {
+template <typename H>
+qVec<T>& qVec<T>::operator=(qVec<H>&& src) noexcept {
     if (this != &src) { // Avoid self-assignment
         delete[] values; // Free the current resources
         size = src.size; // Transfer ownership of the source vector's resources
@@ -264,7 +270,8 @@ qVec<T>& qVec<T>::operator=(qVec<T>&& src) noexcept {
 
 // Equality operator
 template <typename T>
-bool qVec<T>::operator==(const qVec<T>& other) const {
+template <typename H>
+bool qVec<T>::operator==(const qVec<H>& other) const {
     if (size != other.size) return false; // If sizes differ, vectors are not equal
     for (int i = 0; i < size; ++i) {
         if (values[i] != other.values[i]) return false; // If any element differs, vectors are not equal
@@ -276,9 +283,9 @@ bool qVec<T>::operator==(const qVec<T>& other) const {
 template <typename T>
 std::ostream& operator<<(std::ostream& os, const qVec<T>& vec) {
     os << "["; // Start of vector representation
-    for (int i = 0; i < vec.size; ++i) {
-        os << vec.values[i]; // Output each value
-        if (i < vec.size - 1) os << ", "; // Separate values with a comma, except the last one
+    for (size_t i = 0; i < vec.getSize; ++i) {
+        os << vec[i]; // Output each value
+        if (i < vec.getSize() - 1) os << ", "; // Separate values with a comma, except the last one
     }
     os << "]"; // End of vector representation
     return os; // Return the stream object for chaining

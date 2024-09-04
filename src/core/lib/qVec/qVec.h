@@ -3,7 +3,8 @@
 
 #include <stdexcept>
 #include <ostream>
-#include <vector>
+#include <initializer_list>
+
 template <typename T>
 class qVec {
     private:
@@ -14,9 +15,8 @@ class qVec {
     public:
         qVec(int size, T values[], int tSize);
         qVec(int size);
-        qVec(const std::vector<T> vec);
-
-        qVec(const qVec<T>& src);
+        qVec(std::initializer_list<T> values);
+        qVec<T>(const qVec<T>& src);
         ~qVec();
 
         int getSize() const;
@@ -25,12 +25,25 @@ class qVec {
         T getValue(int ind) const;
         void setValue(int ind, const T& value);
 
-        std::vector<T> getVector();
+        template<typename H> T dot(const qVec<H>& mult) const;
+        template<typename H> qVec<T> cross(const qVec<H>& mult) const;
         
-        qVec<T>& operator=(const qVec<T>& src);
-        qVec<T>& operator=(qVec<T>&& src) noexcept;
-        bool operator==(const qVec<T>& other) const;
-        friend std::ostream& operator<<(std::ostream& os, const qVec<T>& vec);
+        template<typename H> qVec<T> operator*(const H mult) const;
+
+        template<typename H>qVec<T>& operator=(const qVec<H>& src);
+        template<typename H>qVec<T>& operator=(qVec<H>&& src) noexcept;
+        template<typename H>bool operator==(const qVec<H>& other) const;
+        friend std::ostream& operator<<(std::ostream& os, const qVec<T>& vec) {
+            os << "["; // Start of vector representation
+            for (size_t i = 0; i < vec.getSize(); ++i) {
+                os << vec[i]; // Output each value
+                if (i < vec.getSize() - 1) os << ", "; // Separate values with a comma, except the last one
+            }
+            os << "]"; // End of vector representation
+            return os; // Return the stream object for chaining
+        };
+        T& operator[](size_t index) { return values[index]; }
+        const T& operator[](size_t index) const { return values[index]; }
 };
 
 #endif
