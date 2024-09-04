@@ -4,10 +4,9 @@
 
 using namespace std;
 int main() {
-    //TODO: Test qVec
-    qVec<int> testVec = qVec<int>({2, 3, 4});
-    qVec<double> testVec2 = qVec<double>({5.0, 6.0, 6.0});
-    //qVec<int> outVec = testVec.dot(testVec2);
-    cout << testVec.cross(testVec2) << endl;
+    qVec<int> row1 = qVec<int>{1, 2, 3};
+    qVec<int> row2 = qVec<int>{4, 5, 6};
+    qVec<int> rows[] = {row1, row2};
+    qMat<int> mat = qMat<int>(3, 2, rows, 2);
     return 0;
 }
