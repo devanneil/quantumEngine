@@ -31,8 +31,8 @@ class qVec {
         template<typename H> qVec<T> add(const qVec<H>& addend) const;
         template<typename H> qVec<T> operator*(const H mult) const;
         template<typename H> qVec<T> operator+(const qVec<H>& addend) const;
-        template<typename H> qVec<T> operator-(const qVec<H>& subtrahend) const {return this.add(-1 * subtrahend);};
-        template<typename H> qVec<T> operator/(const qVec<H>& divident) const {return this.scale(1 / divident);};
+        template<typename H> qVec<T> operator-(const qVec<H>& subtrahend) const {return this->add(subtrahend.scale(-1));};
+        template<typename H> qVec<T> operator/(const H divident) const {return this->scale((float)(1 / divident));};
         template<typename H>qVec<T>& operator=(const qVec<H>& src);
         template<typename H>bool operator==(const qVec<H>& other) const;
         friend std::ostream& operator<<(std::ostream& os, const qVec<T>& vec) {
