@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <ostream>
 #include <initializer_list>
+#include <math.h>
 
 template <typename T>
 class qVec {
@@ -25,10 +26,14 @@ class qVec {
         T getValue(int ind) const;
         void setValue(int ind, const T& value);
 
+        float magnitude() const;
+        qVec<T> norm() const;
+
         template<typename H> T dot(const qVec<H>& mult) const;
         template<typename H> qVec<T> cross(const qVec<H>& mult) const;
-        template<typename H> qVec<T> scale(const H scal) const;
+        template<typename H> qVec<T> scale(const H scalar) const;
         template<typename H> qVec<T> add(const qVec<H>& addend) const;
+        template<typename H> qVec<T> sub(const qVec<H>& subtrahend) const {return this->add(subtrahend.scale(-1));};
         template<typename H> qVec<T> operator*(const H mult) const;
         template<typename H> qVec<T> operator+(const qVec<H>& addend) const;
         template<typename H> qVec<T> operator-(const qVec<H>& subtrahend) const {return this->add(subtrahend.scale(-1));};

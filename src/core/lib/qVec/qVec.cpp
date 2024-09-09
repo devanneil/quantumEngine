@@ -11,6 +11,8 @@ template int qVec<int>::getSize() const;
 template int* qVec<int>::valueOf();
 template int qVec<int>::getValue(int ind) const;
 template void qVec<int>::setValue(int ind, const int& value);
+template float qVec<int>::magnitude() const;
+template qVec<int> qVec<int>::norm() const;
 template int qVec<int>::dot(const qVec<int>& mult) const;
 template int qVec<int>::dot(const qVec<double>& mult) const;
 template int qVec<int>::dot(const qVec<long>& mult) const;
@@ -46,6 +48,8 @@ template int qVec<double>::getSize() const;
 template double* qVec<double>::valueOf();
 template double qVec<double>::getValue(int ind) const;
 template void qVec<double>::setValue(int ind, const double& value);
+template float qVec<double>::magnitude() const;
+template qVec<double> qVec<double>::norm() const;
 template double qVec<double>::dot(const qVec<int>& mult) const;
 template double qVec<double>::dot(const qVec<double>& mult) const;
 template double qVec<double>::dot(const qVec<long>& mult) const;
@@ -71,41 +75,6 @@ template qVec<double> qVec<double>::operator+(const qVec<double>& addend) const;
 template qVec<double> qVec<double>::operator+(const qVec<long>& addend) const;
 template qVec<double> qVec<double>::operator+(const qVec<float>& addend) const;
 
-// Long
-template qVec<long>::qVec(int size, long values[], int tSize);
-template qVec<long>::qVec(int size);
-template qVec<long>::qVec(const qVec<long>& src);
-template qVec<long>::qVec(std::initializer_list<long> values);
-template qVec<long>::~qVec();
-template int qVec<long>::getSize() const;
-template long* qVec<long>::valueOf();
-template long qVec<long>::getValue(int ind) const;
-template void qVec<long>::setValue(int ind, const long& value);
-template long qVec<long>::dot(const qVec<int>& mult) const;
-template long qVec<long>::dot(const qVec<double>& mult) const;
-template long qVec<long>::dot(const qVec<long>& mult) const;
-template long qVec<long>::dot(const qVec<float>& mult) const;
-template qVec<long> qVec<long>::cross(const qVec<int>& mult) const;
-template qVec<long> qVec<long>::cross(const qVec<double>& mult) const;
-template qVec<long> qVec<long>::cross(const qVec<long>& mult) const;
-template qVec<long> qVec<long>::cross(const qVec<float>& mult) const;
-template qVec<long> qVec<long>::scale(const int) const;
-template qVec<long> qVec<long>::scale(const double) const;
-template qVec<long> qVec<long>::scale(const long) const;
-template qVec<long> qVec<long>::scale(const float) const;
-template qVec<long> qVec<long>::add(const qVec<int>& addend) const;
-template qVec<long> qVec<long>::add(const qVec<double>& addend) const;
-template qVec<long> qVec<long>::add(const qVec<long>& addend) const;
-template qVec<long> qVec<long>::add(const qVec<float>& addend) const;
-template qVec<long> qVec<long>::operator*(const int) const;
-template qVec<long> qVec<long>::operator*(const double) const;
-template qVec<long> qVec<long>::operator*(const long) const;
-template qVec<long> qVec<long>::operator*(const float) const;
-template qVec<long> qVec<long>::operator+(const qVec<int>& addend) const;
-template qVec<long> qVec<long>::operator+(const qVec<double>& addend) const;
-template qVec<long> qVec<long>::operator+(const qVec<long>& addend) const;
-template qVec<long> qVec<long>::operator+(const qVec<float>& addend) const;
-
 // Float
 template qVec<float>::qVec(int size, float values[], int tSize);
 template qVec<float>::qVec(int size);
@@ -116,6 +85,8 @@ template int qVec<float>::getSize() const;
 template float* qVec<float>::valueOf();
 template float qVec<float>::getValue(int ind) const;
 template void qVec<float>::setValue(int ind, const float& value);
+template float qVec<float>::magnitude() const;
+template qVec<float> qVec<float>::norm() const;
 template float qVec<float>::dot(const qVec<int>& mult) const;
 template float qVec<float>::dot(const qVec<double>& mult) const;
 template float qVec<float>::dot(const qVec<long>& mult) const;
@@ -305,6 +276,42 @@ void qVec<T>::setValue(int ind, const T& value) {
     }
 }
 /**
+ * @brief Computes the magnitude (or length) of the vector.
+ * 
+ * The magnitude is calculated as the square root of the sum of the squares of the vector's components.
+ * This function assumes that the components are of type T, and the result is returned as a float.
+ * 
+ * @tparam T The type of the elements in the qVec.
+ * @return The magnitude of the vector as a float.
+ */
+template <typename T>
+float qVec<T>::magnitude() const{
+    T sum = 0;
+    for(int i = 0; i < size; i++) {
+        sum += values[i] * values[i];
+    }
+    return std::sqrt(static_cast<float>(sum));
+}
+/**
+ * @brief Computes the normalized version of the vector.
+ * 
+ * The normalized vector is obtained by scaling the current vector by the reciprocal of its magnitude.
+ * If the magnitude is zero, an exception is thrown to indicate that normalization cannot be performed.
+ * The result is a new vector of the same type as the current vector but with a magnitude of 1.
+ * 
+ * @tparam T The type of the elements in the qVec.
+ * @return A new qVec<T> instance representing the normalized vector.
+ * @throws std::runtime_error If the magnitude of the vector is zero.
+ */
+template <typename T>
+qVec<T> qVec<T>::norm() const{
+    float mag = this->magnitude();
+    if (mag == 0) {
+        throw std::runtime_error("Cannot normalize a vector with zero magnitude.");
+    }
+    return this->scale(1.0f / mag);
+}
+/**
  * @brief Computes the dot product of the current vector with another vector.
  * 
  * The dot product is calculated as the sum of the products of the corresponding elements of the two vectors.
@@ -353,6 +360,13 @@ qVec<T> qVec<T>::cross(const qVec<H>& other) const {
     result[1] = this->values[2] * other[0] - this->values[0] * other[2];
     result[2] = this->values[0] * other[1] - this->values[1] * other[0];
 
+    // Adjust for negative zero only if T is a floating-point type
+    if constexpr (std::is_floating_point<T>::value) {
+        if (result[0] == 0.0) result[0] = 0.0;
+        if (result[1] == 0.0) result[1] = 0.0;
+        if (result[2] == 0.0) result[2] = 0.0;
+    }
+    
     return result;
 }
 
@@ -369,10 +383,10 @@ qVec<T> qVec<T>::cross(const qVec<H>& other) const {
  */
 template<typename T>
 template<typename H> 
-qVec<T> qVec<T>::scale(const H scale) const {
+qVec<T> qVec<T>::scale(const H scalar) const {
     qVec<T> newVec = qVec<T>(*this);
     for(size_t i = 0; i < newVec.getSize(); i++) {
-        newVec[i] = this->getValue(i) * scale;
+        newVec[i] = this->getValue(i) * scalar;
     }
     return newVec;
 }
