@@ -14,8 +14,8 @@ class qVec {
 
         void clear();
     public:
-        qVec(int size, T values[], int tSize);
         qVec(int size);
+        qVec(int size, T values[], int tSize);
         qVec(std::initializer_list<T> values);
         qVec<T>(const qVec<T>& src);
         ~qVec();

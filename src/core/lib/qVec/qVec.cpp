@@ -188,11 +188,7 @@ template<typename T>
 qVec<T>::qVec(std::initializer_list<T> list) {
     this->size = list.size();
     this->values = new T[this->size];
-    size_t i = 0;
-    for (auto value : list) {
-        if (i >= size) break;
-        values[i++] = value;
-    }
+    std::copy(list.begin(), list.end(), this->values);
 }
 /**
  * @brief Destructor for the qVec class.
