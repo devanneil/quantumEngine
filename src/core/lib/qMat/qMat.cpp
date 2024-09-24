@@ -5,10 +5,12 @@ template qMat<int>::qMat(std::initializer_list<std::initializer_list<int>> value
 template qMat<int>::~qMat();
 template int qMat<int>::getnSize() const;
 template int qMat<int>::getmSize() const;
-template qVec<int> qMat<int>::get(int ind);
-template int qMat<int>::at(int n, int m);
-template void qMat<int>::set(qVec<int>& vector, int ind);
-template void qMat<int>::setAt(int value, int n, int m);
+template qVec<int> qMat<int>::get(int ind) const;
+template int qMat<int>::at(int n, int m) const;
+template void qMat<int>::set(const qVec<int>& vector, int ind);
+template void qMat<int>::setAt(const int value, int n, int m);
+template qMat<int> qMat<int>::add(const qMat<int>& addend) const;
+
 //TODO: Fill in these functions, and build row operations function (no idea how tho)
 template<typename T> 
 qMat<T>::qMat(int n, int m) {
@@ -48,7 +50,7 @@ int qMat<T>::getmSize() const {
 }
 
 template<typename T>
-qVec<T> qMat<T>::get(int ind) {
+qVec<T> qMat<T>::get(int ind) const {
     if (ind >= 0 && ind < this->nSize) {
         return *this->rows[ind]; // Return the vector at the specified index
     } else {
@@ -57,22 +59,45 @@ qVec<T> qMat<T>::get(int ind) {
 }
 
 template<typename T>
-T qMat<T>::at(int n, int m) {
+T qMat<T>::at(int n, int m) const {
     return(get(n).getValue(m));
 }
 template<typename T>
-void qMat<T>::set(qVec<T>& vector, int ind) {
+void qMat<T>::set(const qVec<T>& vector, int ind) {
     if (ind >= 0 && ind < this->nSize) {
-        this->rows[ind] = &vector;
+        for(int i = 0; i < this->mSize; i++) {
+            if(i < vector.getSize()) {
+                this->rows[ind]->setValue(vector.getValue(i), i);
+            } else {
+                this->rows[ind] = 0;
+            }
+        }
     } else {
         throw std::out_of_range("Index is out of bounds"); // Index is out of range, throw exception
     }
 }
 template<typename T> 
-void qMat<T>::setAt(T value, int n, int m) {
+void qMat<T>::setAt(const T value, int n, int m) {
     if (n >= 0 && n < this->nSize) {
         this->rows[n]->setValue(value, m);
     } else {
         throw std::out_of_range("Index is out of bounds"); // Index is out of range, throw exception
     }
+}
+template<typename T>
+template<typename H>
+qMat<T> qMat<T>::add(const qMat<H>& addend) const {
+    // Check dimensions
+    if (this->getnSize() != addend.getnSize() || this->getmSize() != addend.getmSize()) {
+        throw std::invalid_argument("Matrices must have the same dimensions for addition.");
+    }
+
+    qMat<T> result = qMat<T>(this->getnSize(), this->getmSize());
+
+    for(int i = 0; i < this->nSize; i++) {
+        qVec<T> row = this->get(i).add(addend.get(i));
+        result.set(row, i);
+    }
+
+    return result;
 }
