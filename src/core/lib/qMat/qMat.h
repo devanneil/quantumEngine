@@ -19,8 +19,12 @@ class qMat {
     int getnSize() const;
     int getmSize() const;
     qVec<T> get(int ind);
+    T at(int n, int m);
 
-     friend std::ostream& operator<<(std::ostream& os, const qMat<T>& matrix) {
+    void set(qVec<T>& vector, int ind);
+    void setAt(T value, int n, int m);
+
+    friend std::ostream& operator<<(std::ostream& os, const qMat<T>& matrix) {
             os << "[ " << matrix.getnSize() << " " << matrix.getmSize() << " ]\n"; // Start of vector representation
             for (size_t i = 0; i < matrix.getnSize(); ++i) {
                 qVec<T> vector = *matrix.rows[i];

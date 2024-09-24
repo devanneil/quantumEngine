@@ -2,7 +2,7 @@
 //Include all function declarations with template values
 
 // Integers
-template qVec<int>::qVec(int size, int values[], int tSize);
+template qVec<int>::qVec(int size, int values[]);
 template qVec<int>::qVec(int size);
 template qVec<int>::qVec(const qVec<int>& src);
 template qVec<int>::qVec(std::initializer_list<int> values);
@@ -10,7 +10,7 @@ template qVec<int>::~qVec();
 template int qVec<int>::getSize() const;
 template int* qVec<int>::valueOf();
 template int qVec<int>::getValue(int ind) const;
-template void qVec<int>::setValue(int ind, const int& value);
+template void qVec<int>::setValue(const int& value, int ind);
 template float qVec<int>::magnitude() const;
 template qVec<int> qVec<int>::norm() const;
 template int qVec<int>::dot(const qVec<int>& mult) const;
@@ -39,7 +39,7 @@ template qVec<int> qVec<int>::operator+(const qVec<long>& addend) const;
 template qVec<int> qVec<int>::operator+(const qVec<float>& addend) const;
 
 // Double
-template qVec<double>::qVec(int size, double values[], int tSize);
+template qVec<double>::qVec(int size, double values[]);
 template qVec<double>::qVec(int size);
 template qVec<double>::qVec(const qVec<double>& src);
 template qVec<double>::qVec(std::initializer_list<double> values);
@@ -47,7 +47,7 @@ template qVec<double>::~qVec();
 template int qVec<double>::getSize() const;
 template double* qVec<double>::valueOf();
 template double qVec<double>::getValue(int ind) const;
-template void qVec<double>::setValue(int ind, const double& value);
+template void qVec<double>::setValue(const double& value, int ind);
 template float qVec<double>::magnitude() const;
 template qVec<double> qVec<double>::norm() const;
 template double qVec<double>::dot(const qVec<int>& mult) const;
@@ -76,7 +76,7 @@ template qVec<double> qVec<double>::operator+(const qVec<long>& addend) const;
 template qVec<double> qVec<double>::operator+(const qVec<float>& addend) const;
 
 // Float
-template qVec<float>::qVec(int size, float values[], int tSize);
+template qVec<float>::qVec(int size, float values[]);
 template qVec<float>::qVec(int size);
 template qVec<float>::qVec(const qVec<float>& src);
 template qVec<float>::qVec(std::initializer_list<float> values);
@@ -84,7 +84,7 @@ template qVec<float>::~qVec();
 template int qVec<float>::getSize() const;
 template float* qVec<float>::valueOf();
 template float qVec<float>::getValue(int ind) const;
-template void qVec<float>::setValue(int ind, const float& value);
+template void qVec<float>::setValue(const float& value, int ind);
 template float qVec<float>::magnitude() const;
 template qVec<float> qVec<float>::norm() const;
 template float qVec<float>::dot(const qVec<int>& mult) const;
@@ -123,20 +123,19 @@ template qVec<float> qVec<float>::operator+(const qVec<float>& addend) const;
  * @tparam T The type of the elements in the qVec.
  * @param size The size of the qVec, i.e., the number of elements it should hold.
  * @param values An array of initial values to fill into the qVec. Can be null if no initial values are provided.
- * @param tSize The number of valid elements in the values array. Should be less than or equal to size.
  */
 template <typename T>
-qVec<T>::qVec(int size, T values[], int tSize) {
+qVec<T>::qVec(int size, T values[]) {
     // Set the size of the qVec
     this->size = size;
     
     // Allocate memory for the values array based on the specified size
     this->values = new T[size];
-    
+    size_t tSize = sizeof(values) / sizeof(T);
     // Initialize elements of the qVec with values from the provided array
     for(int i = 0; i < size; i++) {
         // If the index is within the bounds of the provided values array, use the corresponding value
-        if(i < tSize) {
+        if(i <= tSize) {
             this->values[i] = values[i];
         }
         // If the index exceeds the bounds of the provided values array, initialize with zero
@@ -259,12 +258,12 @@ T qVec<T>::getValue(int ind) const {
  * If the index is out of bounds, an `std::out_of_range` exception is thrown.
  * 
  * @tparam T The type of the elements in the qVec.
- * @param ind The index of the element to update. Must be within the range [0, size-1].
  * @param value The new value to set at the specified index.
+ * @param ind The index of the element to update. Must be within the range [0, size-1].
  * @throws std::out_of_range if the index is out of bounds.
  */
 template <typename T>
-void qVec<T>::setValue(int ind, const T& value) {
+void qVec<T>::setValue(const T& value, int ind) {
     if (ind >= 0 && ind < this->size) {
         this->values[ind] = value; // Set the value at the specified index
     } else {

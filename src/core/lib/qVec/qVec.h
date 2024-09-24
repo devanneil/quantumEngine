@@ -15,7 +15,7 @@ class qVec {
         void clear();
     public:
         qVec(int size);
-        qVec(int size, T values[], int tSize);
+        qVec(int size, T values[]);
         qVec(std::initializer_list<T> values);
         qVec<T>(const qVec<T>& src);
         ~qVec();
@@ -24,7 +24,7 @@ class qVec {
         T* valueOf();
 
         T getValue(int ind) const;
-        void setValue(int ind, const T& value);
+        void setValue(const T& value, int ind);
 
         float magnitude() const;
         qVec<T> norm() const;
