@@ -14,31 +14,36 @@ public:
     public:
     qMat(int n, int m);
     qMat(std::initializer_list<std::initializer_list<T>> values);
+    template<typename H>
+    qMat(qMat<H> const &src);
     qMat(qMat<T> const &src);
     ~qMat();
 
     int getnSize() const;
     int getmSize() const;
-    qVec<T>& get(int ind) const;
+    const qVec<T>& get(int ind) const;
     T at(int n, int m) const;
 
     void set(const qVec<T>& vector, int ind);
     void setAt(const T value, int n, int m);
-    qMat<T> transpose();
+
+    qMat<T> transpose() const;
     template <typename H> qMat<T> add(const qMat<H>& addend) const;
-    //TODO: Make all dis
     template <typename H> qMat<T> sub(const qMat<H>& subtrahend) const {return this->add(subtrahend.scale(-1));};
     template <typename H> qMat<T> scale (const H& factor) const;
-    // template <typename H> qMat<T> multiply(const qMat<H>& factor) const;
+    template <typename H> qMat<T> multiply(const qMat<H>& factor) const;
     template <typename H> qMat<T> operator+(const qMat<H>& matrix) const {return this->add(matrix);};
     template <typename H> qMat<T> operator-(const qMat<H>& matrix) const {return this->add(matrix.scale(-1));};
-    // template <typename H> qMat<T> operator*(const qMat<H>& matrix) const {return this->multiply(matrix);};
+    template <typename H> qMat<T> operator*(const qMat<H>& matrix) const {return this->multiply(matrix);};
     template <typename H> qMat<T> operator*(const H& factor) const {return this->scale(factor);};
     template <typename H> qMat<T> operator/(const H& divident) const {return this->scale((float)(1.0 / divident));};
+
     template <typename H> qMat<T>& operator=(const qMat<H>& src);
     qMat<T>& operator=(const qMat<T>& src);
-    bool operator==(const qMat<T>& matrix) const;
-    qVec<T>& operator[] (const int& ind) const {return get(ind);};
+    template <typename H> bool operator==(const qMat<H>& matrix) const;
+    qVec<T>& operator[](int index);         // Non-const version
+    const qVec<T>& operator[](int index) const; // Const version
+
     friend std::ostream& operator<<(std::ostream& os, const qMat<T>& matrix) {
             os << "[ " << matrix.getnSize() << " " << matrix.getmSize() << " ]\n"; // Start of vector representation
             for (size_t i = 0; i < matrix.getnSize(); ++i) {

@@ -3,14 +3,17 @@
 template qMat<int>::qMat(int n, int m);
 template qMat<int>::qMat(std::initializer_list<std::initializer_list<int>> values);
 template qMat<int>::qMat(qMat<int> const &src);
+template qMat<int>::qMat(qMat<long> const &src);
+template qMat<int>::qMat(qMat<float> const &src);
+template qMat<int>::qMat(qMat<double> const &src);
 template qMat<int>::~qMat();
 template int qMat<int>::getnSize() const;
 template int qMat<int>::getmSize() const;
-template qVec<int>& qMat<int>::get(int ind) const;
+template const qVec<int>& qMat<int>::get(int ind) const;
 template int qMat<int>::at(int n, int m) const;
 template void qMat<int>::set(const qVec<int>& vector, int ind);
 template void qMat<int>::setAt(const int value, int n, int m);
-template qMat<int> qMat<int>::transpose();
+template qMat<int> qMat<int>::transpose() const;
 template qMat<int> qMat<int>::add(const qMat<int>& addend) const;
 template qMat<int> qMat<int>::add(const qMat<long>& addend) const;
 template qMat<int> qMat<int>::add(const qMat<float>& addend) const;
@@ -19,7 +22,16 @@ template qMat<int> qMat<int>::scale(const int& factor) const;
 template qMat<int> qMat<int>::scale(const long& factor) const;
 template qMat<int> qMat<int>::scale(const float& factor) const;
 template qMat<int> qMat<int>::scale(const double& factor) const;
+template qMat<int> qMat<int>::multiply(const qMat<int>& factor) const;
+template qMat<int> qMat<int>::multiply(const qMat<long>& factor) const;
+template qMat<int> qMat<int>::multiply(const qMat<float>& factor) const;
+template qMat<int> qMat<int>::multiply(const qMat<double>& factor) const;
 template qMat<int>& qMat<int>::operator=(const qMat<int>&);
+template qMat<int>& qMat<int>::operator=(const qMat<long>&);
+template qMat<int>& qMat<int>::operator=(const qMat<float>&);
+template qMat<int>& qMat<int>::operator=(const qMat<double>&);
+template qVec<int>& qMat<int>::operator[](int index);         // Non-const version
+template const qVec<int>& qMat<int>::operator[](int index) const; // Const version
 
 template<typename T> 
 qMat<T>::qMat(int n, int m) {
@@ -41,6 +53,16 @@ qMat<T>::qMat(std::initializer_list<std::initializer_list<T>> values) {
         std::copy(a.begin(), a.end(), arr);
         rows[i] = new qVec<T>(mSize, arr);
         i++;
+    }
+}
+template<typename T>
+template<typename H>
+qMat<T>::qMat(qMat<H> const &src) {
+    this->nSize = src.getnSize();
+    this->mSize = src.getmSize();
+    this->rows = new qVec<T>*[nSize];
+    for(int i = 0; i < nSize; i++) {
+        rows[i] = new qVec<T>(src.get(i));
     }
 }
 template<typename T>
@@ -70,9 +92,9 @@ int qMat<T>::getmSize() const {
 }
 
 template<typename T>
-qVec<T>& qMat<T>::get(int ind) const {
+const qVec<T>& qMat<T>::get(int ind) const {
     if (ind >= 0 && ind < this->nSize) {
-        return *this->rows[ind]; // Return the vector at the specified index
+        return *this->rows[ind]; // Return a const reference to the vector at the specified index
     } else {
         throw std::out_of_range("Index is out of bounds"); // Index is out of range, throw exception
     }
@@ -105,7 +127,7 @@ void qMat<T>::setAt(const T value, int n, int m) {
     }
 }
 template<typename T>
-qMat<T> qMat<T>::transpose() {
+qMat<T> qMat<T>::transpose() const{
     qMat<T> result(this->getmSize(), this->getnSize());
     for(int i = 0; i < mSize; i++) {
         qVec<T> row(nSize);
@@ -143,53 +165,86 @@ qMat<T> qMat<T>::scale(const H& factor) const {
     }
     return result;
 }
+template <typename T> 
+template <typename H>
+qMat<T> qMat<T>::multiply(const qMat<H>& factor) const {
+    if(this->mSize != factor.getnSize()) {
+        throw std::invalid_argument("Matrices must have compatible dimensions!");
+    }
+    qMat<H> tFactor(factor.transpose());
+    qMat<T> result(this->getnSize(), factor.getmSize());
+    for(int i = 0; i < result.getnSize(); i++) {
+        for(int j = 0; j < result.getmSize(); j++) {
+            result[i][j] = this->get(i).dot(tFactor.get(j));
+        }
+    }
+    return result;
+}
 
 template <typename T>
 template <typename H>
 qMat<T>& qMat<T>::operator=(const qMat<H>& src) {
-    if(this != &src) {
-        // Avoid self-assignment
-        // Step 1: Deallocate existing memory
+    if (this != static_cast<const void*>(&src)) {
+        // Deallocate existing memory
         for (int i = 0; i < nSize; i++) {
-            delete this->rows[i];  // Delete each qVec object
+            delete this->rows[i];
         }
-        delete[] this->rows;  // Delete the array of row pointers
-        // Step 2: Allocate new memory and deep copy
+        delete[] this->rows;
+
+        // Allocate new memory and deep copy
         this->nSize = src.getnSize();
         this->mSize = src.getmSize();
-        this->rows = new qVec<T>*[nSize];  // Allocate new array for qVec pointers
+        this->rows = new qVec<T>*[nSize];
         for (int i = 0; i < nSize; i++) {
-            this->rows[i] = new qVec<T>(src.rows[i]);  // Deep copy each qVec<T> object
+            this->rows[i] = new qVec<T>(src.get(i)); // Using the copy constructor of qVec
         }
     }
     return *this;
 }
-template<typename T>
+
+template <typename T>
 qMat<T>& qMat<T>::operator=(const qMat<T>& src) {
-    if(this != &src) {
-        // Avoid self-assignment
-        // Step 1: Deallocate existing memory
+    if (this != &src) {
+        // Deallocate existing memory
         for (int i = 0; i < nSize; i++) {
-            delete this->rows[i];  // Delete each qVec object
+            delete this->rows[i];
         }
-        delete[] this->rows;  // Delete the array of row pointers
-        // Step 2: Allocate new memory and deep copy
+        delete[] this->rows;
+
+        // Allocate new memory and deep copy
         this->nSize = src.getnSize();
         this->mSize = src.getmSize();
-        this->rows = new qVec<T>*[nSize];  // Allocate new array for qVec pointers
+        this->rows = new qVec<T>*[nSize];
         for (int i = 0; i < nSize; i++) {
-            this->rows[i] = new qVec<T>(src.get(i));  // Deep copy each qVec<T> object
+            this->rows[i] = new qVec<T>(src.get(i)); // Using the copy constructor of qVec
         }
     }
     return *this;
 }
 
 template<typename T>
-bool qMat<T>::operator==(const qMat<T>& matrix) const {
-    if(this->nSize != matrix.nSize) return false;
+template<typename H>
+bool qMat<T>::operator==(const qMat<H>& matrix) const {
+        if(this->nSize != matrix.nSize) return false;
     if(this->mSize != matrix.mSize) return false;
     for(int i = 0; i < this->nSize; i++) {
         if(this->rows[i] != matrix->rows[i]) return false;
     }
     return true;
+}
+
+template <typename T>
+qVec<T>& qMat<T>::operator[](int index) {
+    if (index < 0 || index >= nSize) {
+        throw std::out_of_range("Index is out of bounds");
+    }
+    return *rows[index]; // Return a reference to the row
+}
+
+template <typename T>
+const qVec<T>& qMat<T>::operator[](int index) const {
+    if (index < 0 || index >= nSize) {
+        throw std::out_of_range("Index is out of bounds");
+    }
+    return *rows[index]; // Return a const reference to the row
 }
