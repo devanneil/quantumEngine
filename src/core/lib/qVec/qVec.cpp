@@ -29,6 +29,34 @@ template qVec<int> qVec<int>::add(const qVec<int>& addend) const;
 template qVec<int> qVec<int>::add(const qVec<double>& addend) const;
 template qVec<int> qVec<int>::add(const qVec<long>& addend) const;
 template qVec<int> qVec<int>::add(const qVec<float>& addend) const;
+// Long
+template qVec<long>::qVec(int size, long values[]);
+template qVec<long>::qVec(int size);
+template qVec<long>::qVec(const qVec<long>& src);
+template qVec<long>::qVec(std::initializer_list<long> values);
+template qVec<long>::~qVec();
+template int qVec<long>::getSize() const;
+template long* qVec<long>::valueOf();
+template long qVec<long>::getValue(int ind) const;
+template void qVec<long>::setValue(const long& value, int ind);
+template float qVec<long>::magnitude() const;
+template qVec<long> qVec<long>::norm() const;
+template long qVec<long>::dot(const qVec<int>& mult) const;
+template long qVec<long>::dot(const qVec<double>& mult) const;
+template long qVec<long>::dot(const qVec<long>& mult) const;
+template long qVec<long>::dot(const qVec<float>& mult) const;
+template qVec<long> qVec<long>::cross(const qVec<int>& mult) const;
+template qVec<long> qVec<long>::cross(const qVec<double>& mult) const;
+template qVec<long> qVec<long>::cross(const qVec<long>& mult) const;
+template qVec<long> qVec<long>::cross(const qVec<float>& mult) const;
+template qVec<long> qVec<long>::scale(const int&) const;
+template qVec<long> qVec<long>::scale(const double&) const;
+template qVec<long> qVec<long>::scale(const long&) const;
+template qVec<long> qVec<long>::scale(const float&) const;
+template qVec<long> qVec<long>::add(const qVec<int>& addend) const;
+template qVec<long> qVec<long>::add(const qVec<double>& addend) const;
+template qVec<long> qVec<long>::add(const qVec<long>& addend) const;
+template qVec<long> qVec<long>::add(const qVec<float>& addend) const;
 // Double
 template qVec<double>::qVec(int size, double values[]);
 template qVec<double>::qVec(int size);
@@ -130,7 +158,7 @@ qVec<T>::qVec(const qVec<T>& src) {
 
     // Deep copy the values
     for (int i = 0; i < this->size; ++i) {
-        values[i] = src.values[i];
+        this->values[i] = src.values[i];
     }
 }
 /**
@@ -388,6 +416,20 @@ template <typename H>
 qVec<T>& qVec<T>::operator=(const qVec<H>& src) {
     if (this != &src) {  // Avoid self-assignment by checking if the object is being assigned to itself
         delete[] values; // Free the currently allocated memory to prevent memory leaks
+        values = nullptr;
+        size = src.size; // Copy the size of the source vector
+        values = new T[size]; // Allocate new memory for the values
+        for (int i = 0; i < size; ++i) {
+            values[i] = src.values[i]; // Copy each element from the source vector to the current vector
+        }
+    }
+    return *this; // Return the current object to allow chaining of assignment operations
+}
+template <typename T>
+qVec<T>& qVec<T>::operator=(const qVec<T>& src) {
+    if (this != &src) {  // Avoid self-assignment by checking if the object is being assigned to itself
+        delete[] values; // Free the currently allocated memory to prevent memory leaks
+        values = nullptr;
         size = src.size; // Copy the size of the source vector
         values = new T[size]; // Allocate new memory for the values
         for (int i = 0; i < size; ++i) {
