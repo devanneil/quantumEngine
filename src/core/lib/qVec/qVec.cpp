@@ -336,20 +336,13 @@ qVec<T> qVec<T>::norm() const{
     }
     return this->scale(1.0f / mag);
 }
-/**
- * @brief Computes the dot product of the current vector with another vector.
- * 
- * The dot product is calculated as the sum of the products of the corresponding elements of the two vectors.
- * If the vectors are of different sizes, the function uses the size of the smaller vector.
- * 
- * @tparam T The type of the elements in the current qVec.
- * @tparam H The type of the elements in the other qVec.
- * @param mult A constant reference to another qVec object of potentially different type H.
- * @return The dot product as a scalar of type T.
- */
+//TODO Redo these comments
 template <typename T>
 template <typename H>
 T qVec<T>::dot(const qVec<H>& mult) const {
+#ifdef DOTSIZE
+    if(this->size != mult->size) throw std::out_of_range("Both vectors must be of size 3 for cross product.")
+#endif
     int i = 0;
     T sum = 0;
     for(i = 0; i < mult.getSize(); i++){
@@ -385,13 +378,14 @@ qVec<T> qVec<T>::cross(const qVec<H>& other) const {
     result[1] = this->values[2] * other[0] - this->values[0] * other[2];
     result[2] = this->values[0] * other[1] - this->values[1] * other[0];
 
+#ifdef FLOATNORM
     // Adjust for negative zero only if T is a floating-point type
     if constexpr (std::is_floating_point<T>::value) {
         if (result[0] == 0.0) result[0] = 0.0;
         if (result[1] == 0.0) result[1] = 0.0;
         if (result[2] == 0.0) result[2] = 0.0;
     }
-    
+#endif
     return result;
 }
 

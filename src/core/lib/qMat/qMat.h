@@ -6,7 +6,7 @@
 
 template<typename T>
 class qMat {
-public:
+    private:
     qVec<T>** rows;
     int nSize;
     int mSize;

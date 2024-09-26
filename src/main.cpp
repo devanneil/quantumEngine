@@ -14,5 +14,5 @@ int main() {
 
 //NOTES
 /*
-*
+*   TODO verify all comments in qVec.h and qVec.cpp, functionalities have been changed
 */

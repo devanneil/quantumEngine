@@ -126,6 +126,20 @@ void qMat<T>::setAt(const T value, int n, int m) {
         throw std::out_of_range("Index is out of bounds"); // Index is out of range, throw exception
     }
 }
+#ifdef CONSTTRANSPOSE
+constexpr template<typename T>
+qMat<T> qMat<T>::transpose() const{
+    qMat<T> result(this->getmSize(), this->getnSize());
+    for(int i = 0; i < mSize; i++) {
+        qVec<T> row(nSize);
+        for(int j = 0; j < nSize; j++) {
+            row.setValue(this->get(j).getValue(i), j);
+        }
+        result.set(row, i);
+    }
+    return result;
+}
+#else
 template<typename T>
 qMat<T> qMat<T>::transpose() const{
     qMat<T> result(this->getmSize(), this->getnSize());
@@ -138,6 +152,7 @@ qMat<T> qMat<T>::transpose() const{
     }
     return result;
 }
+#endif
 template<typename T>
 template<typename H>
 qMat<T> qMat<T>::add(const qMat<H>& addend) const {
