@@ -1,6 +1,6 @@
 #include <initializer_list>
 #include <exception>
-#include "../qVec/qVec.h"
+#include <qVec.h>
 #ifndef Q_MAT
 #define Q_MAT
 

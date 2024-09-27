@@ -1,4 +1,4 @@
-src/build/*
+src/app/*
 .vscode
 *.DS_Store
 /build
