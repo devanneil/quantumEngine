@@ -5,7 +5,14 @@
 #include <ostream>
 #include <initializer_list>
 #include <math.h>
-
+/**
+ * @brief Vector for storing numeric values and performing operations.
+ * 
+ * The `qVec` class stores numeric types and supports various vector operations. 
+ * It is designed to be used in conjunction with the `qMat` class for matrix row operations.
+ * 
+ * @tparam T The type stored in the vector (e.g., int, float, double).
+ */
 template <typename T>
 class qVec {
     private:
@@ -26,7 +33,7 @@ class qVec {
         T* valueOf();
 
         T getValue(int ind) const;
-        void setValue(const T& value, int ind);
+        void setValue(int ind, const T& value);
 
         float magnitude() const;
         qVec<T> norm() const;

@@ -13,7 +13,7 @@ template qVec<int>::~qVec();
 template int qVec<int>::getSize() const;
 template int* qVec<int>::valueOf();
 template int qVec<int>::getValue(int ind) const;
-template void qVec<int>::setValue(const int& value, int ind);
+template void qVec<int>::setValue(int ind, const int& value);
 template float qVec<int>::magnitude() const;
 template qVec<int> qVec<int>::norm() const;
 template int qVec<int>::dot(const qVec<int>& mult) const;
@@ -44,7 +44,7 @@ template qVec<long>::~qVec();
 template int qVec<long>::getSize() const;
 template long* qVec<long>::valueOf();
 template long qVec<long>::getValue(int ind) const;
-template void qVec<long>::setValue(const long& value, int ind);
+template void qVec<long>::setValue(int ind, const long& value);
 template float qVec<long>::magnitude() const;
 template qVec<long> qVec<long>::norm() const;
 template long qVec<long>::dot(const qVec<int>& mult) const;
@@ -75,7 +75,7 @@ template qVec<double>::~qVec();
 template int qVec<double>::getSize() const;
 template double* qVec<double>::valueOf();
 template double qVec<double>::getValue(int ind) const;
-template void qVec<double>::setValue(const double& value, int ind);
+template void qVec<double>::setValue(int ind, const double& value);
 template float qVec<double>::magnitude() const;
 template qVec<double> qVec<double>::norm() const;
 template double qVec<double>::dot(const qVec<int>& mult) const;
@@ -107,7 +107,7 @@ template qVec<float>::~qVec();
 template int qVec<float>::getSize() const;
 template float* qVec<float>::valueOf();
 template float qVec<float>::getValue(int ind) const;
-template void qVec<float>::setValue(const float& value, int ind);
+template void qVec<float>::setValue(int ind, const float& value);
 template float qVec<float>::magnitude() const;
 template qVec<float> qVec<float>::norm() const;
 template float qVec<float>::dot(const qVec<int>& mult) const;
@@ -146,7 +146,7 @@ qVec<T>::qVec(int size, T values[]) {
     
     // Allocate memory for the values array based on the specified size
     this->values = new T[size];
-    size_t tSize = sizeof(values) / sizeof(T);
+    size_t tSize = *(&values + 1) - values;
     // Initialize elements of the qVec with values from the provided array
     for(int i = 0; i < size; i++) {
         // If the index is within the bounds of the provided values array, use the corresponding value
@@ -193,8 +193,7 @@ qVec<T>::qVec(const qVec<T>& src) {
  * 
  * This constructor initializes the qVec object with the given size. It allocates
  * memory for the `values` array based on the specified size. The elements of the
- * array are not initialized and will contain indeterminate values until they are 
- * explicitly set.
+ * array will be set to 0.
  * 
  * @tparam T The type of the elements in the qVec.
  * @param size The size of the qVec, i.e., the number of elements it should hold.
@@ -213,10 +212,25 @@ qVec<T>::qVec(int size) {
         values[i] = 0;
     }
 }
+/**
+ * @brief Constructs a qVec object from an initializer list.
+ * 
+ * This constructor allows a qVec object to be initialized using an initializer list.
+ * It allocates memory for the `values` array based on the number of elements in the
+ * list and deep copies the values from the initializer list into the qVec.
+ * 
+ * @tparam T The type of the elements in the qVec.
+ * @param list An initializer list containing the values to initialize the qVec with.
+ */
 template<typename T>
 qVec<T>::qVec(std::initializer_list<T> list) {
+    // Set the size of the qVec based on the number of elements in the initializer list
     this->size = list.size();
+
+    // Allocate memory for the values array based on the size of the initializer list
     this->values = new T[this->size];
+
+    // Copy the elements from the initializer list into the values array
     std::copy(list.begin(), list.end(), this->values);
 }
 /**
@@ -288,12 +302,12 @@ T qVec<T>::getValue(int ind) const {
  * If the index is out of bounds, an `std::out_of_range` exception is thrown.
  * 
  * @tparam T The type of the elements in the qVec.
- * @param value The new value to set at the specified index.
  * @param ind The index of the element to update. Must be within the range [0, size-1].
+ * @param value The new value to set at the specified index.
  * @throws std::out_of_range if the index is out of bounds.
  */
 template <typename T>
-void qVec<T>::setValue(const T& value, int ind) {
+void qVec<T>::setValue(int ind, const T& value) {
     if (ind >= 0 && ind < this->size) {
         this->values[ind] = value; // Set the value at the specified index
     } else {
@@ -336,13 +350,23 @@ qVec<T> qVec<T>::norm() const{
     }
     return this->scale(1.0f / mag);
 }
-//TODO Redo these comments
+/**
+ * @brief Computes the dot product of this qVec and another qVec.
+ * 
+ * This function computes the dot product between the current qVec object 
+ * and another qVec passed as a parameter. It ensures both vectors have the 
+ * same size before performing the operation. The result is the sum of 
+ * the element-wise products of the two vectors.
+ * 
+ * @tparam T The type of the elements in the qVec.
+ * @tparam H The type of the elements in the other qVec.
+ * @param mult The qVec object to compute the dot product with.
+ * @return The dot product as a scalar value of type T.
+ * @throws std::invalid_argument if the two qVec objects have different sizes.
+ */
 template <typename T>
 template <typename H>
 T qVec<T>::dot(const qVec<H>& mult) const {
-#ifdef DOTSIZE
-    if(this->size != mult->size) throw std::out_of_range("Both vectors must be of size 3 for cross product.")
-#endif
     int i = 0;
     T sum = 0;
     for(i = 0; i < mult.getSize(); i++){
@@ -364,6 +388,7 @@ T qVec<T>::dot(const qVec<H>& mult) const {
  * @param other A constant reference to another qVec object of potentially different type H.
  * @return A new qVec object of type T, representing the cross product of the two vectors.
  * @throws std::out_of_range if either vector is not of size 3.
+ * @note use #def FLOATNORM to normalize float values close to 0.
  */
 template <typename T>
 template <typename H>
@@ -431,7 +456,18 @@ qVec<T> qVec<T>::add(const qVec<H>& addend) const {
     return newVec;
 }
 
-// Copy assignment operator
+/**
+ * @brief Copy assignment operator for assigning a qVec of potentially different type.
+ * 
+ * This operator assigns the values of another qVec (of a potentially different type H)
+ * to the current qVec object. It performs a deep copy of the internal array to ensure
+ * independent memory management.
+ * 
+ * @tparam T The type of the elements in the current qVec.
+ * @tparam H The type of the elements in the other qVec.
+ * @param src A constant reference to another qVec of type H to be assigned.
+ * @return A reference to the current qVec object to allow assignment chaining.
+ */
 template <typename T>
 template <typename H>
 qVec<T>& qVec<T>::operator=(const qVec<H>& src) {
@@ -446,6 +482,16 @@ qVec<T>& qVec<T>::operator=(const qVec<H>& src) {
     }
     return *this; // Return the current object to allow chaining of assignment operations
 }
+/**
+ * @brief Copy assignment operator for qVec of the same type.
+ * 
+ * This operator assigns the values of another qVec (of the same type T) to the current qVec.
+ * It performs a deep copy of the internal array, ensuring memory independence between the vectors.
+ * 
+ * @tparam T The type of the elements in the qVec.
+ * @param src A constant reference to another qVec of type T to be assigned.
+ * @return A reference to the current qVec object for assignment chaining.
+ */
 template <typename T>
 qVec<T>& qVec<T>::operator=(const qVec<T>& src) {
     if (this != &src) {  // Avoid self-assignment by checking if the object is being assigned to itself
@@ -459,7 +505,17 @@ qVec<T>& qVec<T>::operator=(const qVec<T>& src) {
     }
     return *this; // Return the current object to allow chaining of assignment operations
 }
-// Equality operator
+/**
+ * @brief Compares two qVec objects for equality.
+ * 
+ * This operator checks whether the current qVec is equal to another qVec object.
+ * It compares the size and elements of both vectors, returning true if all elements match.
+ * 
+ * @tparam T The type of the elements in the current qVec.
+ * @tparam H The type of the elements in the other qVec.
+ * @param other A constant reference to the other qVec to be compared.
+ * @return true if both vectors are equal (same size and element values), false otherwise.
+ */
 template <typename T>
 template <typename H>
 bool qVec<T>::operator==(const qVec<H>& other) const {
@@ -470,7 +526,17 @@ bool qVec<T>::operator==(const qVec<H>& other) const {
     return true; // Vectors are equal if all elements match
 }
 
-// Stream insertion operator
+/**
+ * @brief Stream insertion operator to print qVec.
+ * 
+ * This operator allows easy printing of the qVec object by inserting its contents into
+ * an output stream. The vector is displayed in a comma-separated format enclosed in square brackets.
+ * 
+ * @tparam T The type of the elements in the qVec.
+ * @param os The output stream to insert the vector into.
+ * @param vec A constant reference to the qVec object to be printed.
+ * @return The modified output stream with the qVec contents inserted.
+ */
 template <typename T>
 std::ostream& operator<<(std::ostream& os, const qVec<T>& vec) {
     os << "["; // Start of vector representation
@@ -482,7 +548,12 @@ std::ostream& operator<<(std::ostream& os, const qVec<T>& vec) {
     return os; // Return the stream object for chaining
 }
 
-// Clear method
+/**
+ * @brief Clears the contents of the qVec.
+ * 
+ * This method frees the dynamically allocated memory used by the qVec and resets
+ * the size to 0. The vector becomes empty, with its internal pointer set to null.
+ */
 template <typename T>
 void qVec<T>::clear() {
     delete[] values; // Free the dynamically allocated memory

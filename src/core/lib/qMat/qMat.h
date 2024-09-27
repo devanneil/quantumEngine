@@ -4,6 +4,15 @@
 #ifndef Q_MAT
 #define Q_MAT
 
+/**
+ * @brief Matrix class for storing and manipulating 2D arrays of numeric values.
+ * 
+ * The `qMat` class represents a matrix and provides various operations such as addition, 
+ * subtraction, scaling, and multiplication. It utilizes the `qVec` class for row 
+ * operations and maintains a dynamic array of row vectors.
+ * 
+ * @tparam T The type of elements stored in the matrix. Types are int, float, double, and long
+ */
 template<typename T>
 class qMat {
     private:
@@ -24,8 +33,8 @@ class qMat {
     const qVec<T>& get(int ind) const;
     T at(int n, int m) const;
 
-    void set(const qVec<T>& vector, int ind);
-    void setAt(const T value, int n, int m);
+    void set(int ind, const qVec<T>& vector);
+    void setAt(int n, int m, const T value);
 
     qMat<T> transpose() const;
     template <typename H> qMat<T> add(const qMat<H>& addend) const;
