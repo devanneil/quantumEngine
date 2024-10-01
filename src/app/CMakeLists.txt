@@ -5,13 +5,19 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 
-add_executable(main main.cpp)
+add_executable(main 
+    main.cpp     
+    triangle_mesh.h
+    triangle_mesh.cpp
+    glad.c
+    )
 
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/graphicsSource/openGL)
 
+target_include_directories(main PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 # Link the necessary libraries to the main executable
 target_link_libraries(main 
-    qOpenGL  # The OpenGL-related library
     qVec     # Your custom vector library
     qMat     # Your custom matrix library
+    qOpenGL  # The OpenGL-related library
 )
