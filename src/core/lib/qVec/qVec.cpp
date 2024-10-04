@@ -174,6 +174,7 @@ qVec<T>::qVec(const qVec<H>& src) {
         this->values[i] = src.getValue(i);
     }
 }
+#ifndef __linux__
 template<typename T>
 qVec<T>::qVec(const qVec<T>& src) {
     // Set the size of the qVec
@@ -188,6 +189,7 @@ qVec<T>::qVec(const qVec<T>& src) {
         this->values[i] = src.getValue(i);
     }
 }
+#endif
 /**
  * @brief Constructs a qVec object with a specified size.
  * 

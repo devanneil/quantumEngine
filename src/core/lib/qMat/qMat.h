@@ -21,11 +21,14 @@ class qMat {
     int mSize;
 
     public:
+    qMat() {rows = nullptr, nSize = 0; mSize = 0;};
     qMat(int n, int m);
     qMat(std::initializer_list<std::initializer_list<T>> values);
     template<typename H>
     qMat(qMat<H> const &src);
+#ifndef __linux__
     qMat(qMat<T> const &src);
+#endif
     ~qMat();
 
     int getnSize() const;
@@ -66,6 +69,7 @@ class qMat {
         }
         return *this;
     };
+#ifndef __linux__
     qMat<T>& operator=(const qMat<T>& src){
         if ((void*)this != &src) {
             // Deallocate existing memory
@@ -84,6 +88,7 @@ class qMat {
         }
         return *this;
     };
+#endif
     template <typename H> bool operator==(const qMat<H>& matrix) const {
         if(this->nSize != matrix.nSize) return false;
         if(this->mSize != matrix.mSize) return false;

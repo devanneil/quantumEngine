@@ -24,7 +24,9 @@ TriangleMesh::TriangleMesh() {
     //color
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 24, (void*)12);
     glEnableVertexAttribArray(1);
+
     delete[] data;
+    data = nullptr;
 }
 #include <cmath> // For sin and cos
 
@@ -44,9 +46,12 @@ void rotateVertices(qMat<float>& vertices, float angle) {
 
     // Multiply each vertex by the rotation matrix
     for (int i = 0; i < vertices.getnSize(); i++) {
-        qVec<float> vertex = vertices[i]; // Assuming getRows() returns the number of rows
-        qVec<float> rotatedVertex = vectorMultiply(vertex, rotationMatrix); // Implement this multiplication
-        vertices[i] = rotatedVertex; // Store the rotated vertex back
+        //NOTE This code causes double free error on linux system, needs further investigation
+        // qVec<float> vertex = vertices[i]; // Assuming getRows() returns the number of rows
+        // qVec<float> rotatedVertex = vectorMultiply(vertex, rotationMatrix); // Implement this multiplication
+        // vertices[i] = rotatedVertex; // Store the rotated vertex back
+        //Working Linux code
+        vertices[i] = vectorMultiply(vertices[i], rotationMatrix);
     }
 }
 void TriangleMesh::draw() {
@@ -64,7 +69,7 @@ void TriangleMesh::draw() {
 
     // Free the data array after updating the buffer
     delete[] data;
-
+    data = nullptr;
 }
 
 TriangleMesh::~TriangleMesh() {

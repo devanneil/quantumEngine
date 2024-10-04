@@ -41,8 +41,8 @@ template qMat<long>::qMat(qMat<long> const &src);
 template qMat<long>::qMat(qMat<float> const &src);
 template qMat<long>::qMat(qMat<double> const &src);
 template qMat<long>::~qMat();
-template int qMat<int>::getnSize() const;
-template int qMat<int>::getmSize() const;
+template int qMat<long>::getnSize() const;
+template int qMat<long>::getmSize() const;
 template const qVec<long>& qMat<long>::get(int ind) const;
 template long qMat<long>::at(int n, int m) const;
 template void qMat<long>::set(int ind, const qVec<long>& vector);
@@ -204,6 +204,7 @@ qMat<T>::qMat(qMat<H> const &src) {
  * @tparam T the type of the elements in the new matrix
  * @param src A constant reference to the source matrix.
  */
+#ifndef __linux__
 template<typename T>
 qMat<T>::qMat(qMat<T> const &src) {
     this->nSize = src.getnSize();
@@ -213,6 +214,7 @@ qMat<T>::qMat(qMat<T> const &src) {
         rows[i] = new qVec<T>(src.get(i));
     }
 }
+#endif
 /**
  * @brief Destructor that cleans up the dynamically allocated memory.
  * 

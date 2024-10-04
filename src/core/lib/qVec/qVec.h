@@ -21,12 +21,15 @@ class qVec {
 
         void clear();
     public:
+        qVec() {values = nullptr; size = 0;};
         qVec(int size);
         qVec(int size, T values[]);
         qVec(std::initializer_list<T> values);
         template<typename H>
         qVec(const qVec<H>& src);
+#ifndef __linux__
         qVec(const qVec<T> &src);
+#endif
         ~qVec();
 
         int getSize() const;
