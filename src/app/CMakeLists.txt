@@ -19,5 +19,6 @@ target_include_directories(main PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(main 
     qVec     # Your custom vector library
     qMat     # Your custom matrix library
+    qLinMat
     qOpenGL  # The OpenGL-related library
 )

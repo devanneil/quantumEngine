@@ -47,8 +47,30 @@ class qVec {
         template<typename H> qVec<T> operator+(const qVec<H>& addend) const {return this->add(addend);};
         template<typename H> qVec<T> operator-(const qVec<H>& subtrahend) const {return this->add(subtrahend.scale(-1));};
         template<typename H> qVec<T> operator/(const H divident) const {return this->scale((float)(1.0 / divident));};
-        template<typename H> qVec<T>& operator=(const qVec<H>& src);
-        qVec<T>& operator=(const qVec<T>& src);
+        template<typename H> qVec<T>& operator=(const qVec<H>& src){
+            if ((void*)this != &src) {  // Avoid self-assignment by checking if the object is being assigned to itself
+                delete[] values; // Free the currently allocated memory to prevent memory leaks
+                values = nullptr;
+                size = src.size; // Copy the size of the source vector
+                values = new T[size]; // Allocate new memory for the values
+                for (int i = 0; i < size; ++i) {
+                    values[i] = src.values[i]; // Copy each element from the source vector to the current vector
+                }
+            }
+            return *this; // Return the current object to allow chaining of assignment operations
+        };
+        qVec<T>& operator=(const qVec<T>& src) {
+            if ((void*)this != &src) {  // Avoid self-assignment by checking if the object is being assigned to itself
+                delete[] values; // Free the currently allocated memory to prevent memory leaks
+                values = nullptr;
+                size = src.size; // Copy the size of the source vector
+                values = new T[size]; // Allocate new memory for the values
+                for (int i = 0; i < size; ++i) {
+                    values[i] = src.values[i]; // Copy each element from the source vector to the current vector
+                }
+            }
+            return *this; // Return the current object to allow chaining of assignment operations
+        };
         template<typename H>bool operator==(const qVec<H>& other) const;
         T& operator[](const size_t index ) const { if(index >= 0 && index < size) return values[index]; else throw std::out_of_range("Index is out of bounds");};
         friend std::ostream& operator<<(std::ostream& os, const qVec<T>& vec) {

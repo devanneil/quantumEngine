@@ -13,6 +13,7 @@ template const qVec<int>& qMat<int>::get(int ind) const;
 template int qMat<int>::at(int n, int m) const;
 template void qMat<int>::set(int ind, const qVec<int>& vector);
 template void qMat<int>::setAt(int n, int m, const int value);
+template int* qMat<int>::toArray();
 template qMat<int> qMat<int>::transpose() const;
 template qMat<int> qMat<int>::add(const qMat<int>& addend) const;
 template qMat<int> qMat<int>::add(const qMat<long>& addend) const;
@@ -46,6 +47,7 @@ template const qVec<long>& qMat<long>::get(int ind) const;
 template long qMat<long>::at(int n, int m) const;
 template void qMat<long>::set(int ind, const qVec<long>& vector);
 template void qMat<long>::setAt(int n, int m, const long value);
+template long* qMat<long>::toArray();
 template qMat<long> qMat<long>::transpose() const;
 template qMat<long> qMat<long>::add(const qMat<int>& addend) const;
 template qMat<long> qMat<long>::add(const qMat<long>& addend) const;
@@ -79,6 +81,7 @@ template const qVec<float>& qMat<float>::get(int ind) const;
 template float qMat<float>::at(int n, int m) const;
 template void qMat<float>::set(int ind, const qVec<float>& vector);
 template void qMat<float>::setAt(int n, int m, const float value);
+template float* qMat<float>::toArray();
 template qMat<float> qMat<float>::transpose() const;
 template qMat<float> qMat<float>::add(const qMat<int>& addend) const;
 template qMat<float> qMat<float>::add(const qMat<long>& addend) const;
@@ -112,6 +115,7 @@ template const qVec<double>& qMat<double>::get(int ind) const;
 template double qMat<double>::at(int n, int m) const;
 template void qMat<double>::set(int ind, const qVec<double>& vector);
 template void qMat<double>::setAt(int n, int m, const double value);
+template double* qMat<double>::toArray();
 template qMat<double> qMat<double>::transpose() const;
 template qMat<double> qMat<double>::add(const qMat<int>& addend) const;
 template qMat<double> qMat<double>::add(const qMat<long>& addend) const;
@@ -311,29 +315,8 @@ void qMat<T>::setAt(int n, int m, const T value) {
         throw std::out_of_range("Index is out of bounds"); // Index is out of range, throw exception
     }
 }
-#ifdef CONSTTRANSPOSE
 /**
  * @brief Returns the transpose of the matrix (compile-time constant version).
- * 
- * The transpose operation swaps the rows and columns of the matrix.
- * 
- * @return A new matrix that is the transpose of the current matrix.
- */
-constexpr template<typename T>
-qMat<T> qMat<T>::transpose() const{
-    qMat<T> result(this->getmSize(), this->getnSize());
-    for(int i = 0; i < mSize; i++) {
-        qVec<T> row(nSize);
-        for(int j = 0; j < nSize; j++) {
-            row.setValue(j, this->get(j).getValue(i));
-        }
-        result.set(i, row);
-    }
-    return result;
-}
-#else
-/**
- * @brief Returns the transpose of the matrix. (runtime version)
  * 
  * The transpose operation swaps the rows and columns of the matrix.
  * 
@@ -351,7 +334,21 @@ qMat<T> qMat<T>::transpose() const{
     }
     return result;
 }
-#endif
+/**
+ * @brief Returns a pointer of an array composed of the matrixes values
+ * 
+ * @returns A pointer to the array of the matrixes values
+ */
+template<typename T>
+T* qMat<T>::toArray() {
+    T* values = new T[nSize*mSize];
+    T* dest = values;
+    for(int i = 0; i < nSize; i++) {
+        std::copy(rows[i]->valueOf(), rows[i]->valueOf() + mSize, dest);
+        dest += mSize;
+    }
+    return values;
+}
 /**
  * @brief Adds another matrix of potentially different type to this matrix.
  * 
@@ -425,84 +422,6 @@ qMat<T> qMat<T>::multiply(const qMat<H>& factor) const {
         }
     }
     return result;
-}
-/**
- * @brief Assignment operator that assigns another matrix of potentially different type to this matrix.
- * 
- * Performs a deep copy of the source matrix.
- * 
- * @tparam T the type of the elements in the matrix
- * @tparam H The type of the elements in the source matrix.
- * @param src The source matrix to assign from.
- * @return A reference to this matrix.
- */
-template <typename T>
-template <typename H>
-qMat<T>& qMat<T>::operator=(const qMat<H>& src) {
-    if (this != static_cast<const void*>(&src)) {
-        // Deallocate existing memory
-        for (int i = 0; i < nSize; i++) {
-            delete this->rows[i];
-        }
-        delete[] this->rows;
-
-        // Allocate new memory and deep copy
-        this->nSize = src.getnSize();
-        this->mSize = src.getmSize();
-        this->rows = new qVec<T>*[nSize];
-        for (int i = 0; i < nSize; i++) {
-            this->rows[i] = new qVec<T>(src.get(i)); // Using the copy constructor of qVec
-        }
-    }
-    return *this;
-}
-/**
- * @brief Assignment operator that assigns another matrix of the same type to this matrix.
- * 
- * Performs a deep copy of the source matrix.
- * 
- * @tparam T the type of the elements in the matrix
- * @param src The source matrix to assign from.
- * @return A reference to this matrix.
- */
-template <typename T>
-qMat<T>& qMat<T>::operator=(const qMat<T>& src) {
-    if (this != &src) {
-        // Deallocate existing memory
-        for (int i = 0; i < nSize; i++) {
-            delete this->rows[i];
-        }
-        delete[] this->rows;
-
-        // Allocate new memory and deep copy
-        this->nSize = src.getnSize();
-        this->mSize = src.getmSize();
-        this->rows = new qVec<T>*[nSize];
-        for (int i = 0; i < nSize; i++) {
-            this->rows[i] = new qVec<T>(src.get(i)); // Using the copy constructor of qVec
-        }
-    }
-    return *this;
-}
-/**
- * @brief Equality operator that compares this matrix with another matrix of potentially different type.
- * 
- * Two matrices are equal if they have the same dimensions and corresponding elements are equal.
- * 
- * @tparam T the type of the elements in the matrix
- * @tparam H The type of the elements in the matrix being compared.
- * @param matrix The matrix to compare with.
- * @return True if the matrices are equal, false otherwise.
- */
-template<typename T>
-template<typename H>
-bool qMat<T>::operator==(const qMat<H>& matrix) const {
-        if(this->nSize != matrix.nSize) return false;
-    if(this->mSize != matrix.mSize) return false;
-    for(int i = 0; i < this->nSize; i++) {
-        if(this->rows[i] != matrix->rows[i]) return false;
-    }
-    return true;
 }
 /**
  * @brief Subscript operator that returns a reference to the row vector at the specified index (non-const version).

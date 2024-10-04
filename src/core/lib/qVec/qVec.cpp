@@ -455,56 +455,6 @@ qVec<T> qVec<T>::add(const qVec<H>& addend) const {
     }
     return newVec;
 }
-
-/**
- * @brief Copy assignment operator for assigning a qVec of potentially different type.
- * 
- * This operator assigns the values of another qVec (of a potentially different type H)
- * to the current qVec object. It performs a deep copy of the internal array to ensure
- * independent memory management.
- * 
- * @tparam T The type of the elements in the current qVec.
- * @tparam H The type of the elements in the other qVec.
- * @param src A constant reference to another qVec of type H to be assigned.
- * @return A reference to the current qVec object to allow assignment chaining.
- */
-template <typename T>
-template <typename H>
-qVec<T>& qVec<T>::operator=(const qVec<H>& src) {
-    if (this != &src) {  // Avoid self-assignment by checking if the object is being assigned to itself
-        delete[] values; // Free the currently allocated memory to prevent memory leaks
-        values = nullptr;
-        size = src.size; // Copy the size of the source vector
-        values = new T[size]; // Allocate new memory for the values
-        for (int i = 0; i < size; ++i) {
-            values[i] = src.values[i]; // Copy each element from the source vector to the current vector
-        }
-    }
-    return *this; // Return the current object to allow chaining of assignment operations
-}
-/**
- * @brief Copy assignment operator for qVec of the same type.
- * 
- * This operator assigns the values of another qVec (of the same type T) to the current qVec.
- * It performs a deep copy of the internal array, ensuring memory independence between the vectors.
- * 
- * @tparam T The type of the elements in the qVec.
- * @param src A constant reference to another qVec of type T to be assigned.
- * @return A reference to the current qVec object for assignment chaining.
- */
-template <typename T>
-qVec<T>& qVec<T>::operator=(const qVec<T>& src) {
-    if (this != &src) {  // Avoid self-assignment by checking if the object is being assigned to itself
-        delete[] values; // Free the currently allocated memory to prevent memory leaks
-        values = nullptr;
-        size = src.size; // Copy the size of the source vector
-        values = new T[size]; // Allocate new memory for the values
-        for (int i = 0; i < size; ++i) {
-            values[i] = src.values[i]; // Copy each element from the source vector to the current vector
-        }
-    }
-    return *this; // Return the current object to allow chaining of assignment operations
-}
 /**
  * @brief Compares two qVec objects for equality.
  * 

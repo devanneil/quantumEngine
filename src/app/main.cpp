@@ -4,7 +4,8 @@
 #include <fstream>
 #include <string>
 #include <sstream>
-
+#include <chrono>
+#include <vector>
 unsigned int make_module(const std::string& filepath, unsigned int module_type);
 
 unsigned int make_shader(const std::string& vertex_filepath, const std::string& fragment_filepath) {
@@ -44,7 +45,6 @@ unsigned int make_shader(const std::string& vertex_filepath, const std::string& 
 }
 
 unsigned int make_module(const std::string& filepath, unsigned int module_type) {
-	
 	std::ifstream file;
 	std::stringstream bufferedLines;
 	std::string line;
@@ -75,7 +75,7 @@ unsigned int make_module(const std::string& filepath, unsigned int module_type) 
 }
 
 int main() {
-	
+		
 	GLFWwindow* window;
 
 	if (!glfwInit()) {

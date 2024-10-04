@@ -1,4 +1,3 @@
-#include<vector>
 #include<qOpenGL.h>
 
 class TriangleMesh {
@@ -9,4 +8,5 @@ void draw();
 
 private:
 unsigned int VBO, VAO, vertex_count;
+qMat<float>* vertices;
 };

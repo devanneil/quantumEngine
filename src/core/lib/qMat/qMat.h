@@ -35,6 +35,7 @@ class qMat {
 
     void set(int ind, const qVec<T>& vector);
     void setAt(int n, int m, const T value);
+    T* toArray();
 
     qMat<T> transpose() const;
     template <typename H> qMat<T> add(const qMat<H>& addend) const;
@@ -47,9 +48,50 @@ class qMat {
     template <typename H> qMat<T> operator*(const H& factor) const {return this->scale(factor);};
     template <typename H> qMat<T> operator/(const H& divident) const {return this->scale((float)(1.0 / divident));};
 
-    template <typename H> qMat<T>& operator=(const qMat<H>& src);
-    qMat<T>& operator=(const qMat<T>& src);
-    template <typename H> bool operator==(const qMat<H>& matrix) const;
+    template <typename H> qMat<T>& operator=(const qMat<H>& src) {
+        if ((void*)this != &src) {
+            // Deallocate existing memory
+            for (int i = 0; i < nSize; i++) {
+                delete this->rows[i];
+            }
+            delete[] this->rows;
+
+            // Allocate new memory and deep copy
+            this->nSize = src.getnSize();
+            this->mSize = src.getmSize();
+            this->rows = new qVec<T>*[nSize];
+            for (int i = 0; i < nSize; i++) {
+                this->rows[i] = new qVec<T>(src.get(i)); // Using the copy constructor of qVec
+            }
+        }
+        return *this;
+    };
+    qMat<T>& operator=(const qMat<T>& src){
+        if ((void*)this != &src) {
+            // Deallocate existing memory
+            for (int i = 0; i < nSize; i++) {
+                delete this->rows[i];
+            }
+            delete[] this->rows;
+
+            // Allocate new memory and deep copy
+            this->nSize = src.getnSize();
+            this->mSize = src.getmSize();
+            this->rows = new qVec<T>*[nSize];
+            for (int i = 0; i < nSize; i++) {
+                this->rows[i] = new qVec<T>(src.get(i)); // Using the copy constructor of qVec
+            }
+        }
+        return *this;
+    };
+    template <typename H> bool operator==(const qMat<H>& matrix) const {
+        if(this->nSize != matrix.nSize) return false;
+        if(this->mSize != matrix.mSize) return false;
+        for(int i = 0; i < this->nSize; i++) {
+            if(this->rows[i] != matrix->rows[i]) return false;
+        }
+        return true;
+    };
     qVec<T>& operator[](int index);         // Non-const version
     const qVec<T>& operator[](int index) const; // Const version
 
