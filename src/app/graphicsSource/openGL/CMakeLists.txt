@@ -11,7 +11,7 @@ if (NOT glfw3_FOUND)
         GIT_REPOSITORY https://github.com/glfw/glfw.git
         GIT_TAG 3.3.8
     )
-    FetchContent_MakeAvailable(glfw)
+    FetchContent_MakeAvailable(glfw3)
 else()
     message(STATUS "Found GLFW on the system.")
 endif()

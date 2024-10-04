@@ -24,7 +24,7 @@ TriangleMesh::TriangleMesh() {
     //color
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 24, (void*)12);
     glEnableVertexAttribArray(1);
-
+    delete[] data;
 }
 #include <cmath> // For sin and cos
 
@@ -50,27 +50,20 @@ void rotateVertices(qMat<float>& vertices, float angle) {
     }
 }
 void TriangleMesh::draw() {
-    glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, vertex_count);
     rotateVertices(*vertices, angle);
     angle += 0.001;
-    vertex_count = 3;
+    
     float* data = vertices->toArray();
 
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-
-    glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, 3 * 6 * sizeof(float), data, GL_STATIC_DRAW);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, 3 * 6 * sizeof(float), data);
+    
+    // Draw the triangles
+    glBindVertexArray(VAO);
+    glDrawArrays(GL_TRIANGLES, 0, vertex_count);
 
-    //position
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 24, (void*)0);
-    glEnableVertexAttribArray(0);
-
-    //color
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 24, (void*)12);
-    glEnableVertexAttribArray(1);
+    // Free the data array after updating the buffer
+    delete[] data;
 
 }
 
