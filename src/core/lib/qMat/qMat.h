@@ -93,7 +93,7 @@ class qMat {
         if(this->nSize != matrix.nSize) return false;
         if(this->mSize != matrix.mSize) return false;
         for(int i = 0; i < this->nSize; i++) {
-            if(this->rows[i] != matrix->rows[i]) return false;
+            if(this->rows[i] != matrix.rows[i]) return false;
         }
         return true;
     };

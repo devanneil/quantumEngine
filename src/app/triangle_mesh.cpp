@@ -1,5 +1,5 @@
 #include "triangle_mesh.h"
-float angle = 0;
+
 TriangleMesh::TriangleMesh() {
     
     vertices = new qMat<float>({
@@ -28,48 +28,10 @@ TriangleMesh::TriangleMesh() {
     delete[] data;
     data = nullptr;
 }
-#include <cmath> // For sin and cos
-
-void rotateVertices(qMat<float>& vertices, float angle) {
-    // Convert angle to radians
-    float radians = angle * (M_PI / 180.0f); // Assuming angle is in degrees
-
-    // Create rotation matrix around the Z-axis
-    qMat<float> rotationMatrix({
-        {cos(radians), -sin(radians), 0, 0, 0, 0},
-        {sin(radians), cos(radians), 0, 0, 0, 0},
-        {0, 0, 1, 0, 0, 0},
-        {0, 0, 0, cos(radians), -sin(radians), 0},
-        {0, 0, 0, sin(radians), cos(radians), 0},
-        {0, 0, 0, 0, 0, 1}
-    });
-
-    // Multiply each vertex by the rotation matrix
-    for (int i = 0; i < vertices.getnSize(); i++) {
-        //NOTE This code causes double free error on linux system, needs further investigation
-        // qVec<float> vertex = vertices[i]; // Assuming getRows() returns the number of rows
-        // qVec<float> rotatedVertex = vectorMultiply(vertex, rotationMatrix); // Implement this multiplication
-        // vertices[i] = rotatedVertex; // Store the rotated vertex back
-        //Working Linux code
-        vertices[i] = vectorMultiply(vertices[i], rotationMatrix);
-    }
-}
-void TriangleMesh::draw() {
-    rotateVertices(*vertices, angle);
-    angle += 0.001;
-    
-    float* data = vertices->toArray();
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, 3 * 6 * sizeof(float), data);
-    
+void TriangleMesh::draw() {        
     // Draw the triangles
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, vertex_count);
-
-    // Free the data array after updating the buffer
-    delete[] data;
-    data = nullptr;
 }
 
 TriangleMesh::~TriangleMesh() {

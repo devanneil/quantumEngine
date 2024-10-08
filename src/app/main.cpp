@@ -103,13 +103,23 @@ int main() {
 		"../src/app/shaders/vertex.txt", 
 		"../src/app/shaders/fragment.txt"
 	);
+	glUseProgram(shader);
+
+	qMat<float> model = transformMatrix(0.5f, -0.2f, 0.0f, 0.0f, 0.0f, 0.0f);
+	unsigned int model_location = glGetUniformLocation(shader, "model");
+	glUniformMatrix4fv(model_location, 1, GL_FALSE, model.toArray());
 
 	while (!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
 
+		model = rotationMatrix(0.0f, 0.0f, 10.0f *(float)glfwGetTime());
+		unsigned int model_location = glGetUniformLocation(shader, "model");
+
 		glClear(GL_COLOR_BUFFER_BIT);
 		glUseProgram(shader);
 		triangle->draw();
+
+		glUniformMatrix4fv(model_location, 1, GL_FALSE, model.toArray());
 
 		glfwSwapBuffers(window);
 	}
