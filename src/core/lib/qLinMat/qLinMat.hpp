@@ -107,5 +107,33 @@ template<typename T> qMat<T> transformMatrix(T x, T y, T z, T xAngle, T yAngle, 
     }
     return result;
 }
+template<typename T> qMat<T> viewMatrix(qVec<T> from, qVec<T> to, qVec<T> upRef = qVec<float>{0.0, 0.0, 1.0}) {
+    if(from.getSize() != 3 || to.getSize() != 3 || upRef.getSize() != 3) {
+        throw std::invalid_argument("Vector must be size of 3!");
+    }
+    qVec<T> forward = to.sub(from).norm();
+    qVec<T> right = forward.cross(upRef).norm();
+    qVec<T> up = right.cross(forward).norm();
 
+    qMat<T> result = {
+        {right.getValue(0), up.getValue(0), -forward.getValue(0), 0},
+        {right.getValue(1), up.getValue(1), -forward.getValue(1), 0},
+        {right.getValue(2), up.getValue(2), -forward.getValue(2), 0},
+        {-right.dot(from), -up.dot(from), forward.dot(from), 1}
+    };
+    return result;
+}
+inline qMat<float> projectionMatrix(float fov, float aspect, float near, float far) {
+    float fovRad = fov * M_PI / 360;
+    float tan = tanf(fovRad);
+
+    qMat<float> result = {
+        {1 / (aspect * tan), 0, 0, 0},
+        {0, 1 / tan, 0, 0},
+        {0, 0, (near + far) / (far - near), -1},
+        {0, 0, (2 * near * far) / (far - near), 0}
+    };
+
+    return result;
+}
 #endif

@@ -108,11 +108,25 @@ int main() {
 	qMat<float> model = transformMatrix(0.5f, -0.2f, 0.0f, 0.0f, 0.0f, 0.0f);
 	unsigned int model_location = glGetUniformLocation(shader, "model");
 	glUniformMatrix4fv(model_location, 1, GL_FALSE, model.toArray());
+	
+	qVec<float> cameraPosition = {1.0, 1.0, 1.0};
+	qVec<float> cameraTarget = {0, 0, 0};
+	qVec<float> globalUp = {0, 0, 1};
+	qMat<float> view = viewMatrix(cameraPosition, cameraTarget);
+	unsigned int view_location = glGetUniformLocation(shader, "view");
+	glUniformMatrix4fv(view_location, 1, GL_FALSE, view.toArray());
 
+	qMat<float> projection = projectionMatrix(45.0f, 480.0f/640.0f, 0.5f, 10.0f);
+	unsigned int projection_location = glGetUniformLocation(shader, "projection");
+	glUniformMatrix4fv(projection_location, 1, GL_FALSE, projection.toArray());
+	
+	double totalTime = glfwGetTime();
 	while (!glfwWindowShouldClose(window)) {
+		glfwSetTime(0);
+
 		glfwPollEvents();
 
-		model = rotationMatrix(0.0f, 0.0f, 10.0f *(float)glfwGetTime());
+		model = rotationMatrix(0.0f, 0.0f, 10.0f * (float)totalTime);
 		unsigned int model_location = glGetUniformLocation(shader, "model");
 
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -122,6 +136,8 @@ int main() {
 		glUniformMatrix4fv(model_location, 1, GL_FALSE, model.toArray());
 
 		glfwSwapBuffers(window);
+		double frameTime = glfwGetTime();
+		totalTime += frameTime;
 	}
 
 	glDeleteProgram(shader);
