@@ -4,8 +4,8 @@
 #include <fstream>
 #include <string>
 #include <sstream>
-#include <chrono>
 #include <vector>
+
 unsigned int make_module(const std::string& filepath, unsigned int module_type);
 
 unsigned int make_shader(const std::string& vertex_filepath, const std::string& fragment_filepath) {
@@ -75,7 +75,6 @@ unsigned int make_module(const std::string& filepath, unsigned int module_type) 
 }
 
 int main() {
-		
 	GLFWwindow* window;
 
 	if (!glfwInit()) {
@@ -98,7 +97,8 @@ int main() {
 	glClearColor(0.25f, 0.5f, 0.75f, 1.0f);
 
 	TriangleMesh* triangle = new TriangleMesh();
-
+	glMesh mesh = glMesh("../src/app/models/square.obj");
+	std::cout << mesh.faces << std::endl;
 	unsigned int shader = make_shader(
 		"../src/app/shaders/vertex.txt", 
 		"../src/app/shaders/fragment.txt"
@@ -109,7 +109,7 @@ int main() {
 	unsigned int model_location = glGetUniformLocation(shader, "model");
 	glUniformMatrix4fv(model_location, 1, GL_FALSE, model.toArray());
 	
-	qVec<float> cameraPosition = {1.0, 1.0, 1.0};
+	qVec<float> cameraPosition = {5.0, 5.0, 5.0};
 	qVec<float> cameraTarget = {0, 0, 0};
 	qVec<float> globalUp = {0, 0, 1};
 	qMat<float> view = viewMatrix(cameraPosition, cameraTarget);
@@ -126,13 +126,13 @@ int main() {
 
 		glfwPollEvents();
 
-		model = rotationMatrix(0.0f, 0.0f, 10.0f * (float)totalTime);
+		model = transformMatrix(0.0f, 0.0f, 0.0f, (float)(1.0*totalTime), (float)(10.0*totalTime), (float)(25.0*totalTime));
 		unsigned int model_location = glGetUniformLocation(shader, "model");
 
 		glClear(GL_COLOR_BUFFER_BIT);
 		glUseProgram(shader);
-		triangle->draw();
-
+		//triangle->draw();
+		mesh.draw();
 		glUniformMatrix4fv(model_location, 1, GL_FALSE, model.toArray());
 
 		glfwSwapBuffers(window);

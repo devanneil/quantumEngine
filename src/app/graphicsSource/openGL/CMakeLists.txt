@@ -31,4 +31,5 @@ target_link_libraries(qOpenGL
     qVec
     qMat
     qLinMat
+    qMesh
 )

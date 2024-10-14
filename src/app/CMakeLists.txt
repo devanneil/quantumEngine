@@ -21,4 +21,5 @@ target_link_libraries(main
     qMat     # Your custom matrix library
     qLinMat
     qOpenGL  # The OpenGL-related library
+    qMesh
 )

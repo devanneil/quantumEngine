@@ -76,7 +76,7 @@ template<typename T> qMat<T> rotationMatrix(T xAngle, T yAngle, T zAngle) {
     qMat<T> result = {
         {zCos * yCos, zCos * ySin * xSin - zSin * xCos, zCos * ySin * xCos + zSin * xSin, 0},
         {zSin * yCos, zSin * ySin * xSin + zCos * xCos, zSin * ySin * xCos - zCos * xSin, 0},
-        {-ySin, yCos * xSin, yCos * xSin, yCos * xCos},
+        {-ySin, yCos * xSin, yCos * xCos, 0},
         {0, 0, 0, 1}};
     for(int i = 0; i < result.getnSize(); i++) {
         for(int j = 0; j < result.getmSize(); j++) {
@@ -98,7 +98,7 @@ template<typename T> qMat<T> transformMatrix(T x, T y, T z, T xAngle, T yAngle, 
     qMat<T> result = {
         {zCos * yCos, zCos * ySin * xSin - zSin * xCos, zCos * ySin * xCos + zSin * xSin, 0},
         {zSin * yCos, zSin * ySin * xSin + zCos * xCos, zSin * ySin * xCos - zCos * xSin, 0},
-        {-ySin, yCos * xSin, yCos * xSin, yCos * xCos},
+        {-ySin, yCos * xSin, yCos * xCos, 0},
         {x, y, z, 1}};
     for(int i = 0; i < result.getnSize(); i++) {
         for(int j = 0; j < result.getmSize(); j++) {

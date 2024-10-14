@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_subdirectory(core/lib/qMat)
 add_subdirectory(core/lib/qVec)
 add_subdirectory(core/lib/qLinMat)
+add_subdirectory(core/lib/qMesh)
 
 # Add subdirectory for the main application
 add_subdirectory(app)

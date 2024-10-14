@@ -1,5 +1,6 @@
 #include "qMat.h"
-
+#ifndef QMAT
+#define QMAT
 template qMat<int>::qMat(int n, int m);
 template qMat<int>::qMat(std::initializer_list<std::initializer_list<int>> values);
 template qMat<int>::qMat(qMat<int> const &src);
@@ -458,3 +459,4 @@ const qVec<T>& qMat<T>::operator[](int index) const {
     }
     return *rows[index]; // Return a const reference to the row
 }
+#endif

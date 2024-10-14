@@ -1,6 +1,7 @@
 #include "qVec.h"
 //Include all function declarations with template values
-
+#ifndef QVEC
+#define QVEC
 // Integers
 template qVec<int>::qVec(int size, int values[]);
 template qVec<int>::qVec(int size);
@@ -512,3 +513,4 @@ void qVec<T>::clear() {
     size = 0; // Reset the size to 0
     values = nullptr; // Set the pointer to null to avoid dangling references
 }
+#endif
