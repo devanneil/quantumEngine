@@ -7,8 +7,6 @@ set(CMAKE_VERBOSE_MAKEFILE OFF)
 
 add_executable(main 
     main.cpp     
-    triangle_mesh.h
-    triangle_mesh.cpp
     glad.c
     )
 
