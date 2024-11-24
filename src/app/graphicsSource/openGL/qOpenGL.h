@@ -17,25 +17,22 @@ class glMesh : public qMesh {
 
         glGenBuffers(1, &VBO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, vertex_count * sizeof(float), data, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, vertexCount * sizeof(float), data, GL_STATIC_DRAW);
 
-        //position
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 12, (void*)0);
+        // Position attribute
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
 
-        //color
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 12, (void*)0);
+        //Remove color attribute if not needed
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(1);
 
         glEnable(GL_CULL_FACE);
     }
 
     void draw() override {
-        // Bind the VAO
         glBindVertexArray(VAO);
-        
-        // Draw the vertices as triangles
-        glDrawArrays(GL_TRIANGLES, 0, faces.getmSize() * sizeof(float)); // Ensure this count matches your vertex data
+        glDrawArrays(GL_TRIANGLES, 0, faces.getnSize() * 3); // Ensure correct vertex count
     }
 
 };

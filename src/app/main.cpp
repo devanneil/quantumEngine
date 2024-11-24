@@ -1,5 +1,4 @@
 #include <qOpenGL.h>
-#include "triangle_mesh.h"
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -48,7 +47,7 @@ unsigned int make_module(const char* module, unsigned int module_type) {
 	return shaderModule;
 }
 
-unsigned int make_shader(const std::string& vertex_filepath, const std::string& fragment_filepath) {
+unsigned int make_shader() {
 
 	//To store all the shader modules
 	std::vector<unsigned int> modules;
@@ -105,14 +104,9 @@ int main() {
 	}
 
 	glClearColor(0.25f, 0.5f, 0.75f, 1.0f);
-
-	TriangleMesh* triangle = new TriangleMesh();
 	glMesh mesh = glMesh("../src/app/models/square.obj");
 	std::cout << mesh.faces << std::endl;
-	unsigned int shader = make_shader(
-		"../src/app/shaders/vertex.txt", 
-		"../src/app/shaders/fragment.txt"
-	);
+	unsigned int shader = make_shader();
 	glUseProgram(shader);
 
 	qMat<float> model = transformMatrix(0.5f, -0.2f, 0.0f, 0.0f, 0.0f, 0.0f);
@@ -141,7 +135,6 @@ int main() {
 
 		glClear(GL_COLOR_BUFFER_BIT);
 		glUseProgram(shader);
-		//triangle->draw();
 		mesh.draw();
 		glUniformMatrix4fv(model_location, 1, GL_FALSE, model.toArray());
 
@@ -151,7 +144,6 @@ int main() {
 	}
 
 	glDeleteProgram(shader);
-	delete triangle;
 	glfwTerminate();
 	return 0;
 }
