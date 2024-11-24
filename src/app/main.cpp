@@ -1,12 +1,52 @@
 #include <qOpenGL.h>
 #include "triangle_mesh.h"
 #include <iostream>
-#include <fstream>
 #include <string>
 #include <sstream>
 #include <vector>
+const char* vertexShader = R"END(#version 330 core
 
-unsigned int make_module(const std::string& filepath, unsigned int module_type);
+layout (location=0) in vec3 vertexPos;
+layout (location=1) in vec3 vertexColor;
+
+out vec3 fragmentColor;
+
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
+
+void main()
+{
+    gl_Position = projection * view * model * vec4(vertexPos, 1.0);
+    fragmentColor = vertexColor;
+})END";
+const char* fragmentShader = R"END(#version 330 core
+
+in vec3 fragmentColor;
+
+out vec4 screenColor;
+
+void main()
+{
+    screenColor = vec4(fragmentColor, 1.0);
+})END";
+
+unsigned int make_module(const char* module, unsigned int module_type) {
+
+	unsigned int shaderModule = glCreateShader(module_type);
+	glShaderSource(shaderModule, 1, &module, NULL);
+	glCompileShader(shaderModule);
+
+	int success;
+	glGetShaderiv(shaderModule, GL_COMPILE_STATUS, &success);
+	if (!success) {
+		char errorLog[1024];
+		glGetShaderInfoLog(shaderModule, 1024, NULL, errorLog);
+		std::cout << "Shader Module compilation error:\n" << errorLog << std::endl;
+	}
+
+	return shaderModule;
+}
 
 unsigned int make_shader(const std::string& vertex_filepath, const std::string& fragment_filepath) {
 
@@ -14,10 +54,10 @@ unsigned int make_shader(const std::string& vertex_filepath, const std::string& 
 	std::vector<unsigned int> modules;
 
 	//Add a vertex shader module
-	modules.push_back(make_module(vertex_filepath, GL_VERTEX_SHADER));
+	modules.push_back(make_module(vertexShader, GL_VERTEX_SHADER));
 
 	//Add a fragment shader module
-	modules.push_back(make_module(fragment_filepath, GL_FRAGMENT_SHADER));
+	modules.push_back(make_module(fragmentShader, GL_FRAGMENT_SHADER));
 
 	//Attach all the modules then link the program
 	unsigned int shader = glCreateProgram();
@@ -42,36 +82,6 @@ unsigned int make_shader(const std::string& vertex_filepath, const std::string& 
 
 	return shader;
 
-}
-
-unsigned int make_module(const std::string& filepath, unsigned int module_type) {
-	std::ifstream file;
-	std::stringstream bufferedLines;
-	std::string line;
-
-	file.open(filepath);
-	while (std::getline(file, line)) {
-		//std::cout << line << std::endl;
-		bufferedLines << line << '\n';
-	}
-	std::string shaderSource = bufferedLines.str();
-	const char* shaderSrc = shaderSource.c_str();
-	bufferedLines.str("");
-	file.close();
-
-	unsigned int shaderModule = glCreateShader(module_type);
-	glShaderSource(shaderModule, 1, &shaderSrc, NULL);
-	glCompileShader(shaderModule);
-
-	int success;
-	glGetShaderiv(shaderModule, GL_COMPILE_STATUS, &success);
-	if (!success) {
-		char errorLog[1024];
-		glGetShaderInfoLog(shaderModule, 1024, NULL, errorLog);
-		std::cout << "Shader Module compilation error:\n" << errorLog << std::endl;
-	}
-
-	return shaderModule;
 }
 
 int main() {
