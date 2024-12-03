@@ -4,11 +4,10 @@
 #include <qMesh.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#ifdef QOPENGL
 #ifndef QOPENGL_H
 #define QOPENGL_H
-class glMesh : public qMesh {
-    public:
-    glMesh(char* filepath) : qMesh(filepath) {
+    void qMesh::loadData() {
         unsigned int vertexCount = faces.getmSize() * faces.getnSize();
         float* data = faces.toArray();
 
@@ -30,10 +29,9 @@ class glMesh : public qMesh {
         glEnable(GL_CULL_FACE);
     }
 
-    void draw() override {
+    void qMesh::draw() {
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, faces.getnSize() * 3); // Ensure correct vertex count
     }
-
-};
+#endif
 #endif

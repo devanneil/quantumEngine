@@ -60,6 +60,7 @@ qMesh::qMesh(char* filepath) {
             faces[i / 3][3 * j + 2] = temp_vertices[vertexIndex][2]; // z component
         }
     }
+    loadData();
 }
 qMesh::qMesh(int size) {
     vertexes = qMat<float>(3, size);
@@ -82,9 +83,6 @@ void qMesh::setFace(int ind, qVec<float> v1, qVec<float> v2, qVec<float> v3) {
     row[7] = v3[1];
     row[8] = v3[2];
     faces.set(ind, row);
-}
-
-void qMesh::draw() {
-    //TODO, implement me
+    loadData();
 }
 #endif

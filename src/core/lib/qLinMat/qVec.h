@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <ostream>
 #include <initializer_list>
+#include <iterator>
 #include <math.h>
 /**
  * @brief Vector for storing numeric values and performing operations.

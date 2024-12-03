@@ -1,4 +1,7 @@
+//Planned method to include graphics module
+#define QOPENGL
 #include <qOpenGL.h>
+//rest of code
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -103,11 +106,12 @@ int main() {
 		return -1;
 	}
 
-	glClearColor(0.25f, 0.5f, 0.75f, 1.0f);
-	glMesh mesh = glMesh("../src/app/models/square.obj");
-	std::cout << mesh.faces << std::endl;
 	unsigned int shader = make_shader();
 	glUseProgram(shader);
+
+	glClearColor(0.25f, 0.5f, 0.75f, 1.0f);
+	qMesh mesh = qMesh("../src/app/models/square.obj");
+	std::cout << mesh.faces << std::endl;
 
 	qMat<float> model = transformMatrix(0.5f, -0.2f, 0.0f, 0.0f, 0.0f, 0.0f);
 	unsigned int model_location = glGetUniformLocation(shader, "model");
@@ -135,6 +139,11 @@ int main() {
 
 		glClear(GL_COLOR_BUFFER_BIT);
 		glUseProgram(shader);
+		mesh.draw();
+		glUniformMatrix4fv(model_location, 1, GL_FALSE, model.toArray());
+
+		model = transformMatrix(1.0f, 0.0f, 1.0f, (float)(1.0*totalTime), (float)(10.0*totalTime), (float)(25.0*totalTime));
+		model_location = glGetUniformLocation(shader, "model");
 		mesh.draw();
 		glUniformMatrix4fv(model_location, 1, GL_FALSE, model.toArray());
 

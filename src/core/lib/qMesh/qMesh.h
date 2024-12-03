@@ -9,7 +9,10 @@ class qMesh {
     qMat<float> faces;
     qMat<float> UVs;
     qMat<float> normals;
+    //Values for loading data
+#ifdef QOPENGL //OpenGL Module
     unsigned int VBO, VAO, vertex_count;
+#endif
     public:
     qMesh() {
         vertexes = qMat<float>();
@@ -22,6 +25,7 @@ class qMesh {
 
     void setFace(int ind, qVec<float> v1, qVec<float> v2, qVec<float> v3);
 
-    virtual void draw();
+    void draw();
+    void loadData();
 };
 #endif
