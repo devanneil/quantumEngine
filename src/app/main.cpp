@@ -6,6 +6,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <qFile.h>
 const char* vertexShader = R"END(#version 330 core
 
 layout (location=0) in vec3 vertexPos;

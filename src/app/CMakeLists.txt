@@ -20,4 +20,5 @@ target_link_libraries(main
     qLinMat
     qOpenGL  # The OpenGL-related library
     qMesh
+    qFile
 )
