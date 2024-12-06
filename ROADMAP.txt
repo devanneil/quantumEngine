@@ -1,0 +1,47 @@
+The Roadmap for Quantum Engine and the Todo's as it stands:
+
+IMPORTANT:
+Current required tools
+mingw or equivalent
+cmake
+OpenGL
+GLWF (will install itself at build)
+
+To develop a minimum viable product Quantum Engine needs all of these features:
+3D Graphics implementation for several file types
+    Successfully prove swapping graphics engines
+    Interactable with 3D features
+    Input/Output handling and recognition
+
+Coherent project management UI and file structure
+    Able to select files and modules on a session by session basis
+    Export completed projects with and without associated modules
+
+Module control and mechanisms
+    User defined modules
+    Seamlessly add modules and swap equivalent parts
+
+Further development 
+    Asset store for modules and project parts
+    Remote development support
+    Node based shader/pipeline editor
+    Version control
+
+Current TODOs
+    Verify current version stability for Windows and Linux systems
+        qFile will help with this
+        fix qMat and qVec double free errors
+        verify memory security
+    qFile as file wrapper and handler
+        hanle opening and closing of all files
+        organize files into a folder system
+        handle IO functions
+    Rebuild qMesh and qOpenGL to be more modular
+        use qFile to handle file interactions
+        improve modularity using c preprocessor
+        export as one module which can be easily used in place of another
+    Build input/output system
+        modularity is incredibly important as just using GLFW will not work with Vulkan or DX systems
+        likely need to be handled on a seperate thread from rendering
+    Modularize screen and rendering
+        unsure yet how to proceed, will need time to experiment and ideas
