@@ -28,6 +28,7 @@ Further development
     Version control
 
 Current TODOs
+    Unit testing for all classes
     Verify current version stability for Windows and Linux systems
         qFile will help with this
         fix qMat and qVec double free errors
