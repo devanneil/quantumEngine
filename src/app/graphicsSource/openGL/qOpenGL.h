@@ -27,6 +27,8 @@
         glEnableVertexAttribArray(1);
 
         glEnable(GL_CULL_FACE);
+
+        delete[] data;
     }
 
     void qMesh::draw() {

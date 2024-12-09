@@ -344,10 +344,10 @@ qMat<T> qMat<T>::transpose() const{
  */
 template<typename T>
 T* qMat<T>::toArray() {
-    T* values = new T[nSize*mSize];
+    T* values = new T[nSize * mSize];
     T* dest = values;
     for(int i = 0; i < nSize; i++) {
-        std::copy(rows[i]->valueOf(), rows[i]->valueOf() + mSize, dest);
+        std::copy(rows[i]->begin(), rows[i]->end(), dest);
         dest += mSize;
     }
     return values;

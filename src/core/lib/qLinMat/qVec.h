@@ -34,7 +34,6 @@ class qVec {
         ~qVec();
 
         int getSize() const;
-        T* valueOf();
 
         T getValue(int ind) const;
         void setValue(int ind, const T& value);
@@ -86,6 +85,32 @@ class qVec {
             os << "]"; // End of vector representation
             return os; // Return the stream object for chaining
         };
+        
+        struct Iterator 
+        {
+            using iterator_category = std::forward_iterator_tag;
+            using difference_type   = std::ptrdiff_t;
+            using value_type        = T;
+            using pointer           = T*;  // or also value_type*
+            using reference         = T&;  // or also value_type&
+
+            Iterator(pointer ptr) : values_ptr(ptr) {}
+
+            reference operator*() const { return *values_ptr; }
+            pointer operator->() { return values_ptr; }
+
+            // Prefix increment
+            Iterator& operator++() { values_ptr++; return *this; }  
+            // Postfix increment
+            Iterator operator++(int) { Iterator tmp = *this; ++(*this); return tmp; }
+
+            friend bool operator== (const Iterator& a, const Iterator& b) { return a.values_ptr == b.values_ptr; };
+            friend bool operator!= (const Iterator& a, const Iterator& b) { return a.values_ptr != b.values_ptr; };     
+            private:
+            pointer values_ptr;
+        };
+        Iterator begin() { return Iterator(&values[0]); }
+        Iterator end()   { return Iterator(&values[size]); }
 };
 
 #endif

@@ -22,7 +22,9 @@ class qMesh {
     }
     qMesh(char* filePath);
     qMesh(int size);
-
+    ~qMesh() {
+        
+    };
     void setFace(int ind, qVec<float> v1, qVec<float> v2, qVec<float> v3);
 
     void draw();

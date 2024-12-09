@@ -12,7 +12,6 @@ template qVec<int>::qVec(const qVec<double>& src);
 template qVec<int>::qVec(std::initializer_list<int> values);
 template qVec<int>::~qVec();
 template int qVec<int>::getSize() const;
-template int* qVec<int>::valueOf();
 template int qVec<int>::getValue(int ind) const;
 template void qVec<int>::setValue(int ind, const int& value);
 template float qVec<int>::magnitude() const;
@@ -43,7 +42,6 @@ template qVec<long>::qVec(const qVec<double>& src);
 template qVec<long>::qVec(std::initializer_list<long> values);
 template qVec<long>::~qVec();
 template int qVec<long>::getSize() const;
-template long* qVec<long>::valueOf();
 template long qVec<long>::getValue(int ind) const;
 template void qVec<long>::setValue(int ind, const long& value);
 template float qVec<long>::magnitude() const;
@@ -74,7 +72,6 @@ template qVec<double>::qVec(const qVec<double>& src);
 template qVec<double>::qVec(std::initializer_list<double> values);
 template qVec<double>::~qVec();
 template int qVec<double>::getSize() const;
-template double* qVec<double>::valueOf();
 template double qVec<double>::getValue(int ind) const;
 template void qVec<double>::setValue(int ind, const double& value);
 template float qVec<double>::magnitude() const;
@@ -106,7 +103,6 @@ template qVec<float>::qVec(const qVec<double>& src);
 template qVec<float>::qVec(std::initializer_list<float> values);
 template qVec<float>::~qVec();
 template int qVec<float>::getSize() const;
-template float* qVec<float>::valueOf();
 template float qVec<float>::getValue(int ind) const;
 template void qVec<float>::setValue(int ind, const float& value);
 template float qVec<float>::magnitude() const;
@@ -263,20 +259,6 @@ template <typename T>
 int qVec<T>::getSize() const{
     // Return the size of the qVec
     return size;
-}
-/**
- * @brief Provides access to the internal values array.
- * 
- * This function returns a pointer to the internal `values` array of the qVec object. 
- * It allows direct access to the array elements stored within the qVec.
- * 
- * @tparam T The type of the elements in the qVec.
- * @return A pointer to the internal array of values.
- */
-template <typename T>
-T* qVec<T>::valueOf(){
-    // Return a pointer to the internal values array
-    return this->values;
 }
 /**
  * @brief Retrieves the value at a specified index.

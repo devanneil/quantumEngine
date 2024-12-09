@@ -26,7 +26,7 @@ class qFile {
     double nextDouble(char delim = ' ');
     float nextFloat(char delim = ' ');
 };
-qFile openFiles[] = {};
+unsigned int openFiles[] = {};
 void init(char* homePath);
 void closeAll();
 #endif
