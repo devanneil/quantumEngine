@@ -1,7 +1,9 @@
 #ifndef QFILE_H
 #define QFILE_H
+#include <stdio.h>
+#include <dirent.h>
 enum FileType {
-    FOLDER, DATA, NONE, CLOSED, WRITE, APPEND
+    FOLDER, DATA, CLOSED, WRITE, APPEND
 };
 /**
  * Cannot be bothered to make this right now, might make Courage do it unsure yet
@@ -21,12 +23,16 @@ class qFile {
     unsigned int size;
     char* filePath;
     FileType type;
-    unsigned int ID;
+    union fileSruct {
+        FILE* file;
+        DIR* dir;
+    } data;
     unsigned int line;
 
     public:
-    qFile() {type = NONE; filePath = nullptr; size = 0;};
+    qFile() {type = CLOSED; filePath = nullptr; size = 0;};
     qFile(char* filePath);
+    ~qFile();
 
     void openFile(char* filePath);
     void close();
@@ -37,8 +43,10 @@ class qFile {
     int nextInt(char delim = ' ');
     double nextDouble(char delim = ' ');
     float nextFloat(char delim = ' ');
+
+    int getSize() {return size;};
 };
-unsigned int openFiles[] = {};
+//unsigned int openFiles[] = {};
 void init(char* homePath);
 void closeAll();
 #endif

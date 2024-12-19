@@ -88,6 +88,10 @@ unsigned int make_shader() {
 }
 
 int main() {
+	qFile modelFile("../src/app/models/square.obj");
+	std::cout << modelFile.getSize() << std::endl;
+	modelFile.openFile("../src/app/models/dodecahedron.obj");
+	std::cout << modelFile.getSize() << std::endl;
 	GLFWwindow* window;
 
 	if (!glfwInit()) {
@@ -151,7 +155,7 @@ int main() {
 		glUniformMatrix4fv(model_location, 1, GL_FALSE, modelArray2);
 		delete[] modelArray2;
 
-		model = transformMatrix(1.0f, 0.0f, 1.0f, (float)(1.0*totalTime), (float)(10.0*totalTime), (float)(25.0*totalTime));
+		model = transformMatrix(1.0f, 0.0f, 1.0f, (float)(-1.0*totalTime), (float)(10.0*totalTime), (float)(25.0*totalTime));
 		model_location = glGetUniformLocation(shader, "model");
 		mesh.draw();
 		float* modelArray = model.toArray();
