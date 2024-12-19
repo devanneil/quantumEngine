@@ -1,8 +1,10 @@
 #include "qMesh.h"
+#include <cstring>
+#include <iostream>
 #ifndef QMESH
 #define QMESH
 qMesh::qMesh(char* filepath) {
-    std::vector<qVec<float>> temp_vertices, temp_uvs, temp_normals;
+    std::vector<qVec<float>*> temp_vertices, temp_uvs, temp_normals;
     std::vector< unsigned int > vertexIndices, uvIndices, normalIndices;
     FILE * file = fopen(filepath, "r");
     if( file == NULL ){
@@ -13,19 +15,17 @@ qMesh::qMesh(char* filepath) {
         // read the first word of the line
         int res = fscanf(file, "%s", lineHeader);
         if (res == EOF) break; // EOF = End Of File. Quit the loop.
-
+        float v1 = 0, v2 = 0, v3 = 0;
         if ( strcmp( lineHeader, "v" ) == 0 ){
-            qVec<float> vertex = qVec<float>(3);
-            fscanf(file, "%f %f %f\n", &vertex[0], &vertex[1], &vertex[2] );
-            temp_vertices.push_back(vertex);
+            fscanf(file, "%f %f %f\n", &v1, &v2, &v3);
+            temp_vertices.push_back(new qVec<float> {v1, v2, v3});
         }else if ( strcmp( lineHeader, "vt" ) == 0 ){
             qVec<float> uv = qVec<float>(2);
-            fscanf(file, "%f %f\n", &uv[0], &uv[1] );
-            temp_uvs.push_back(uv);
+            fscanf(file, "%f %f\n", &v1, &v2 );
+            temp_uvs.push_back(new qVec<float> {v1, v2});
         }else if ( strcmp( lineHeader, "vn" ) == 0 ){
-            qVec<float> normal = qVec<float>(3);
-            fscanf(file, "%f %f %f\n", &normal[0], &normal[1], &normal[2]);
-            temp_normals.push_back(normal);
+            fscanf(file, "%f %f %f\n", &v1, &v2, &v3);
+            temp_normals.push_back(new qVec<float> {v1, v2, v3});
         }else if ( strcmp( lineHeader, "f" ) == 0 ){
             std::string vertex1, vertex2, vertex3;
             unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
@@ -47,19 +47,20 @@ qMesh::qMesh(char* filepath) {
     if(vertexIndices.size() % 3 != 0) {
         printf("Invalid face");
     }
-    vertexes = qMat<float>(temp_vertices.size(), 3);
-    faces = qMat<float>(vertexIndices.size() / 3, 9);
-    UVs = qMat<float>(temp_uvs.size(), 2);
-    normals = qMat<float>(3, temp_normals.size());
+    this->vertexes = qMat<float>(temp_vertices.size(), 3);
+    this->faces = qMat<float>((int)(vertexIndices.size() / 3), 9);
+    this->UVs = qMat<float>(temp_uvs.size(), 2);
+    this->normals = qMat<float>(3, temp_normals.size());
     for (unsigned int i = 0; i < vertexIndices.size(); i += 3) {
         for (int j = 0; j < 3; j++) { // Loop over the three vertices of each face
             unsigned int vertexIndex = vertexIndices[i + j] - 1; // Get the correct vertex index (1-based to 0-based)
             // Set the x, y, z components for this face's j-th vertex
-            faces[i / 3][3 * j + 0] = temp_vertices[vertexIndex][0]; // x component
-            faces[i / 3][3 * j + 1] = temp_vertices[vertexIndex][1]; // y component
-            faces[i / 3][3 * j + 2] = temp_vertices[vertexIndex][2]; // z component
+            this->faces[i / 3][3 * j + 0] = temp_vertices[vertexIndex]->getValue(0); // x component
+            this->faces[i / 3][3 * j + 1] = temp_vertices[vertexIndex]->getValue(1); // y component
+            this->faces[i / 3][3 * j + 2] = temp_vertices[vertexIndex]->getValue(2); // z component
         }
     }
+    for(qVec<float>* v : temp_vertices) delete(v);
     loadData();
 }
 qMesh::qMesh(int size) {

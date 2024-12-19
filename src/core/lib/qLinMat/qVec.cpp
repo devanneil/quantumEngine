@@ -137,24 +137,22 @@ template qVec<float> qVec<float>::add(const qVec<float>& addend) const;
  * @param values An array of initial values to fill into the qVec. Can be null if no initial values are provided.
  */
 template <typename T>
-qVec<T>::qVec(int size, T values[]) {
+qVec<T>::qVec(int _size, T _values[]) {
     // Set the size of the qVec
-    this->size = size;
+    this->size = _size;
     
     // Allocate memory for the values array based on the specified size
-    this->values = new T[size];
-    size_t tSize = *(&values + 1) - values;
+    this->values = new T[_size];
+    size_t tSize = sizeof(_values)/sizeof(_values[0]);
     // Initialize elements of the qVec with values from the provided array
-    for(int i = 0; i < size; i++) {
+    for(int i = 0; i < _size; i++) {
         // If the index is within the bounds of the provided values array, use the corresponding value
-        if(i <= tSize) {
-            this->values[i] = values[i];
-        }
-        // If the index exceeds the bounds of the provided values array, initialize with zero
-        else {
-            this->values[i] = 0;
+        printf("%f ", _values[i]);
+        if(i < tSize) {
+            this->values[i] = _values[i];
         }
     }
+    printf("\n");
 }
 template <typename T>
 template <typename H>
@@ -244,7 +242,10 @@ qVec<T>::qVec(std::initializer_list<T> list) {
 template <typename T>
 qVec<T>::~qVec() {
     //Calls clear function to delete vector
-    this->clear();
+    std::cout << "Destroyed qVec: " << this << std::endl;
+    delete[] values;
+    values = nullptr;
+    size = 0;
 }
 /**
  * @brief Retrieves the size of the qVec object.
@@ -483,16 +484,4 @@ std::ostream& operator<<(std::ostream& os, const qVec<T>& vec) {
     return os; // Return the stream object for chaining
 }
 
-/**
- * @brief Clears the contents of the qVec.
- * 
- * This method frees the dynamically allocated memory used by the qVec and resets
- * the size to 0. The vector becomes empty, with its internal pointer set to null.
- */
-template <typename T>
-void qVec<T>::clear() {
-    delete[] values; // Free the dynamically allocated memory
-    size = 0; // Reset the size to 0
-    values = nullptr; // Set the pointer to null to avoid dangling references
-}
 #endif

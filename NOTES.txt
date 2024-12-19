@@ -1,0 +1,5 @@
+Potential fixes:
+    qMat and qVec do not always check for nullpointer
+    When printing error matrixes it seems likely that the uninitialized vectors are null. This is not correct behaviour as they should be an array of 0.
+    Run gdb backtrace to find out more
+    It seems likely that the issue is with move semantics. I will need to research how to implement them.

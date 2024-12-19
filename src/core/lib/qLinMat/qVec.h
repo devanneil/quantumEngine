@@ -20,7 +20,6 @@ class qVec {
         T* values;
         int size;
 
-        void clear();
     public:
         qVec() {values = nullptr; size = 0;};
         qVec(int size);
@@ -76,6 +75,7 @@ class qVec {
         };
         template<typename H>bool operator==(const qVec<H>& other) const;
         T& operator[](const size_t index ) const { if(index >= 0 && index < size) return values[index]; else throw std::out_of_range("Index is out of bounds");};
+        T& operator[](const size_t index ) { if(index >= 0 && index < size) return values[index]; else throw std::out_of_range("Index is out of bounds");};
         friend std::ostream& operator<<(std::ostream& os, const qVec<T>& vec) {
             os << "["; // Start of vector representation
             for (size_t i = 0; i < vec.getSize(); ++i) {
@@ -85,7 +85,7 @@ class qVec {
             os << "]"; // End of vector representation
             return os; // Return the stream object for chaining
         };
-        
+
         struct Iterator 
         {
             using iterator_category = std::forward_iterator_tag;

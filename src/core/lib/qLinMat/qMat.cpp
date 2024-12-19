@@ -190,11 +190,15 @@ qMat<T>::qMat(std::initializer_list<std::initializer_list<T>> values) {
 template<typename T>
 template<typename H>
 qMat<T>::qMat(qMat<H> const &src) {
-    this->nSize = src.getnSize();
-    this->mSize = src.getmSize();
-    this->rows = new qVec<T>*[nSize];
-    for(int i = 0; i < nSize; i++) {
-        rows[i] = new qVec<T>(src.get(i));
+    if((void*)this != &src) {
+        this->nSize = src.getnSize();
+        this->mSize = src.getmSize();
+        this->rows = new qVec<T>*[nSize];
+        if(src.getnSize() != 0) {
+            for(int i = 0; i < nSize; i++) {
+                rows[i] = new qVec<T>(src.get(i));
+            }
+        }
     }
 }
 /**
@@ -223,10 +227,18 @@ qMat<T>::qMat(qMat<T> const &src) {
  */
 template<typename T>
 qMat<T>::~qMat() {
-    for(int i = 0; i < nSize; i++) {
-        delete(rows[i]);
+    if (rows != nullptr) {
+        for (int i = 0; i < nSize; ++i) {
+            if (rows[i] != nullptr) {
+                delete rows[i];
+                rows[i] = nullptr; // Prevent dangling pointers
+            }
+        }
+        delete[] rows;
+        rows = nullptr;
     }
-    delete[] this->rows;
+    this->nSize = 0;
+    this->mSize = 0;
 }
 /**
  * @brief Returns the number of rows in the matrix.
@@ -437,10 +449,15 @@ qMat<T> qMat<T>::multiply(const qMat<H>& factor) const {
  */
 template <typename T>
 qVec<T>& qMat<T>::operator[](int index) {
-    if (index < 0 || index >= nSize) {
+    if (index >= 0 && index < nSize) {
+        try {
+            return *rows[index]; // Return a reference to the row
+        } catch (std::exception e){
+            throw e;
+        } 
+    } else {
         throw std::out_of_range("Index is out of bounds");
-    }
-    return *rows[index]; // Return a reference to the row
+    } 
 }
 
 /**
@@ -454,9 +471,14 @@ qVec<T>& qMat<T>::operator[](int index) {
  */
 template <typename T>
 const qVec<T>& qMat<T>::operator[](int index) const {
-    if (index < 0 || index >= nSize) {
+    if (index >= 0 && index < nSize) {
+        try {
+            return *rows[index]; // Return a reference to the row
+        } catch (std::exception e){
+            throw e;
+        } 
+    } else {
         throw std::out_of_range("Index is out of bounds");
     }
-    return *rows[index]; // Return a const reference to the row
 }
 #endif

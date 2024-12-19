@@ -103,7 +103,7 @@ class qMat {
     friend std::ostream& operator<<(std::ostream& os, const qMat<T>& matrix) {
             os << "[ " << matrix.getnSize() << " " << matrix.getmSize() << " ]\n"; // Start of vector representation
             for (size_t i = 0; i < matrix.getnSize(); ++i) {
-                qVec<T> vector = *matrix.rows[i];
+                qVec<T> vector = matrix.get(i);
                 os << "{ ";
                 for(size_t j = 0; j < matrix.getmSize(); j++){
                     os << vector[j] << " ";
