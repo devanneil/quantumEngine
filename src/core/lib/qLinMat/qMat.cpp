@@ -3,6 +3,7 @@
 #define QMAT
 template qMat<int>::qMat(int n, int m);
 template qMat<int>::qMat(std::initializer_list<std::initializer_list<int>> values);
+template qMat<int>::qMat(qMat<int>&& src);
 template qMat<int>::qMat(qMat<int> const &src);
 template qMat<int>::qMat(qMat<long> const &src);
 template qMat<int>::qMat(qMat<float> const &src);
@@ -37,6 +38,7 @@ template const qVec<int>& qMat<int>::operator[](int index) const; // Const versi
 
 template qMat<long>::qMat(int n, int m);
 template qMat<long>::qMat(std::initializer_list<std::initializer_list<long>> values);
+template qMat<long>::qMat(qMat<long>&& src);
 template qMat<long>::qMat(qMat<int> const &src);
 template qMat<long>::qMat(qMat<long> const &src);
 template qMat<long>::qMat(qMat<float> const &src);
@@ -71,6 +73,7 @@ template const qVec<long>& qMat<long>::operator[](int index) const; // Const ver
 
 template qMat<float>::qMat(int n, int m);
 template qMat<float>::qMat(std::initializer_list<std::initializer_list<float>> values);
+template qMat<float>::qMat(qMat<float>&& src);
 template qMat<float>::qMat(qMat<int> const &src);
 template qMat<float>::qMat(qMat<long> const &src);
 template qMat<float>::qMat(qMat<float> const &src);
@@ -105,6 +108,7 @@ template const qVec<float>& qMat<float>::operator[](int index) const; // Const v
 
 template qMat<double>::qMat(int n, int m);
 template qMat<double>::qMat(std::initializer_list<std::initializer_list<double>> values);
+template qMat<double>::qMat(qMat<double>&& src);
 template qMat<double>::qMat(qMat<int> const &src);
 template qMat<double>::qMat(qMat<long> const &src);
 template qMat<double>::qMat(qMat<float> const &src);
@@ -177,6 +181,16 @@ qMat<T>::qMat(std::initializer_list<std::initializer_list<T>> values) {
         rows[i] = new qVec<T>(mSize, arr);
         i++;
     }
+}
+template<typename T>
+qMat<T>::qMat(qMat<T>&& src) {
+    this->rows = src.rows;
+    this->nSize = src.nSize;
+    this->mSize = src.mSize;
+
+    src.rows = nullptr;
+    src.nSize = 0;
+    src.mSize = 0;
 }
 /**
  * @brief Copy constructor that initializes a matrix from another matrix of a potentially different type.

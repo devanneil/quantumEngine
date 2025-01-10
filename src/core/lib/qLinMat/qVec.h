@@ -26,6 +26,7 @@ class qVec {
         qVec(int size);
         qVec(int size, T values[]);
         qVec(std::initializer_list<T> values);
+        qVec(qVec<T>&& src);
         template<typename H>
         qVec(const qVec<H>& src);
 #ifndef __linux__

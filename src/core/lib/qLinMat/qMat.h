@@ -24,6 +24,7 @@ class qMat {
     qMat() {rows = nullptr, nSize = 0; mSize = 0;};
     qMat(int n, int m);
     qMat(std::initializer_list<std::initializer_list<T>> values);
+    qMat(qMat<T>&& src);
     template<typename H>
     qMat(qMat<H> const &src);
 #ifndef __linux__

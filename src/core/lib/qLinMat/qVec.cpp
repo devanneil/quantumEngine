@@ -5,6 +5,7 @@
 // Integers
 template qVec<int>::qVec(int size, int values[]);
 template qVec<int>::qVec(int size);
+template qVec<int>::qVec(qVec<int>&& src);
 template qVec<int>::qVec(const qVec<int>& src);
 template qVec<int>::qVec(const qVec<long>& src);
 template qVec<int>::qVec(const qVec<float>& src);
@@ -35,6 +36,7 @@ template qVec<int> qVec<int>::add(const qVec<float>& addend) const;
 // Long
 template qVec<long>::qVec(int size, long values[]);
 template qVec<long>::qVec(int size);
+template qVec<long>::qVec(qVec<long>&& src);
 template qVec<long>::qVec(const qVec<int>& src);
 template qVec<long>::qVec(const qVec<long>& src);
 template qVec<long>::qVec(const qVec<float>& src);
@@ -65,6 +67,7 @@ template qVec<long> qVec<long>::add(const qVec<float>& addend) const;
 // Double
 template qVec<double>::qVec(int size, double values[]);
 template qVec<double>::qVec(int size);
+template qVec<double>::qVec(qVec<double>&& src);
 template qVec<double>::qVec(const qVec<int>& src);
 template qVec<double>::qVec(const qVec<long>& src);
 template qVec<double>::qVec(const qVec<float>& src);
@@ -96,6 +99,7 @@ template qVec<double> qVec<double>::add(const qVec<float>& addend) const;
 // Float
 template qVec<float>::qVec(int size, float values[]);
 template qVec<float>::qVec(int size);
+template qVec<float>::qVec(qVec<float>&& src);
 template qVec<float>::qVec(const qVec<int>& src);
 template qVec<float>::qVec(const qVec<long>& src);
 template qVec<float>::qVec(const qVec<float>& src);
@@ -155,6 +159,13 @@ qVec<T>::qVec(int size, T values[]) {
             this->values[i] = 0;
         }
     }
+}
+template <typename T>
+qVec<T>::qVec(qVec<T>&& src) {
+    this->values = src.values;
+    this->size = src.size;
+    src.values = nullptr;
+    src.size = 0;
 }
 template <typename T>
 template <typename H>
