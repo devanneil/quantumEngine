@@ -2,7 +2,7 @@ The Roadmap for Quantum Engine and the Todo's as it stands:
 
 IMPORTANT:
 Current required tools
-mingw or equivalent
+c/c++ compiler
 cmake
 OpenGL
 GLWF (will install itself at build)
@@ -21,55 +21,45 @@ Module control and mechanisms
     User defined modules
     Seamlessly add modules and swap equivalent parts
 
-Further development 
+Further development:
     Asset store for modules and project parts
     Remote development support
     Node based shader/pipeline editor
-    Version control
+    Version control for modules
 
 Current TODOs
     Unit testing for all classes
     Verify current version stability for Windows and Linux systems
         qFile will help with this
         fix qMat and qVec double free errors
+            implement qTest
         verify memory security
+            memory was not secure XD
+        Linux:
+            Linux handles scoping REALLY goofy and sometimes decides to throw imortant variables out of scope
+            we'll need to track this with the debugger and find out why.
+        Windows:
+            Until we can get our own development environment set up on a Windows PC we'll need to put a pin in this
+            This is obviously a bad idea
     qFile as file wrapper and handler
         hanle opening and closing of all files
         organize files into a folder system
         handle IO functions
+        Implemnt unit testing
     Rebuild qMesh and qOpenGL to be more modular
         use qFile to handle file interactions
         improve modularity using c preprocessor
         export as one module which can be easily used in place of another
-    Build input/output system
-        modularity is incredibly important as just using GLFW will not work with Vulkan or DX systems
-        likely need to be handled on a seperate thread from rendering
     Modularize screen and rendering
         unsure yet how to proceed, will need time to experiment and ideas
 
-qVec iterator code:
-        struct Iterator 
-        {
-            using iterator_category = std::forward_iterator_tag;
-            using difference_type   = std::ptrdiff_t;
-            using value_type        = T;
-            using pointer           = T*;  // or also value_type*
-            using reference         = T&;  // or also value_type&
-
-            Iterator(pointer ptr) : values_ptr(ptr) {}
-
-            reference operator*() const { return *values_ptr; }
-            pointer operator->() { return values_ptr; }
-
-            // Prefix increment
-            Iterator& operator++() { values_ptr++; return *this; }  
-            // Postfix increment
-            Iterator operator++(int) { Iterator tmp = *this; ++(*this); return tmp; }
-
-            friend bool operator== (const Iterator& a, const Iterator& b) { return a.values_ptr == b.values_ptr; };
-            friend bool operator!= (const Iterator& a, const Iterator& b) { return a.values_ptr != b.values_ptr; };     
-            private:
-            pointer values_ptr;
-        };
-        Iterator begin() { return Iterator(&values[0]); }
-        Iterator end()   { return Iterator(&values[size]); }
+    IDEAS BOARD
+        File Interpreter as a seperate module which can be called as a function
+            .obj .stl .amf .fbx .gltf .usd/usdz .blend (hypothetically)
+            users would include these in a folder within qFile. we could then easily automate the inclusion of these
+                and the install process through the asset store and github
+        Handling objects as a set of files instead of one continuous file
+            saves us from having to design our own file design
+            users could specify using our own file design later when we actually have one
+        github integration
+            native github integration might not be feasible due to licensing but it would be awesome
