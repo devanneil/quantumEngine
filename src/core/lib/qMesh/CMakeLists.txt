@@ -12,3 +12,15 @@ target_include_directories(qMat PUBLIC ${PROJECT_SOURCE_DIR}/core/lib/qMat)
 
 # Specify the include directory for qVec (so qMesh can use it)
 target_include_directories(qVec PUBLIC ${PROJECT_SOURCE_DIR}/core/lib/qVec)
+
+#CMAKE Tests configuration
+set(CURRENT_TEST "qMesh")
+include(cTest)
+add_executable(${CURRENT_TEST}Test unitTests.cpp)
+target_link_libraries(${CURRENT_TEST}Test 
+    #INCLUDE LIBRARY TO TEST HERE
+    qMesh
+)
+add_test(NAME Q_FILE_TEST COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${CURRENT_TEST}Test)
+
+##NOTE: to make changes to test we need to clean rebuild. Either remove /build directory or run clean rebuild in vs code

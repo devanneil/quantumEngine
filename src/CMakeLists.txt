@@ -10,3 +10,5 @@ add_subdirectory(core/lib/qMesh)
 add_subdirectory(core/lib/qFile)
 # Add subdirectory for the main application
 add_subdirectory(app)
+# COMMENT BELOW LINE TO DISABLE TESTING
+enable_testing()
