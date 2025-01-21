@@ -1,6 +1,4 @@
 #include<qVec.h>
-#include<qMat.h>
-#include<qVec.h>
 //Variable used for general purpose, always set back to 0 when done
 int failCatch = 0;
 int main() {
@@ -141,7 +139,39 @@ int main() {
     /**
      * TEST 11: MOVE SEMANTICS
      * 
-     * THIS TEST IS TBD
+     * This test will fail if the move constructors change the behaviour of the vector
      */
+    printf("MOVE TEST: \n");
+    qVec<int> movedVec = std::move(copyVec);
+    if(movedVec != copyVec) return 1;
+    printf("EQUIVALENCE PASSED\n");
+    if(&movedVec == &copyVec) {
+        printf("COPY ERROR!");
+        return 1;
+    }
+    if(movedVec != emptyVec) return 1;
+    printf("SECOND EQUIVALENCE PASSED\n");
+    printf("SUCCESS!\n");
+    /**
+     * TEST 12: DESTRUCTOR AND CLEAR
+     * 
+     * This test will fail if the clear() function does not work or the destructor does not work
+     * This test does not check if the vector is actually cleared but rather if it seg faults in the clearing process
+     */
+    printf("DESTRUCTOR TEST: ");
+    try {
+        if(true) {
+        qVec<int> destructorVec = {0, 1, 2};
+        }
+    } catch (std::exception &e) {
+        printf("DESTRUCTOR ERROR\n");
+        printf("%s", e.what());
+        return 1;
+    }
+    printf("SUCCESS!\n");
+
+    printf("---------FUNCTIONALITY TESTS---------\n");
+
+    
     return 0;
 }
