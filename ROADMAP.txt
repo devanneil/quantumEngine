@@ -29,7 +29,7 @@ Further development:
 
 Current TODOs
     Unit testing for all classes
-    Verify current version stability for Windows and Linux systems
+    Verify current version stability for Windows and Linux systems [Devan]
         qFile will help with this
         fix qMat and qVec double free errors
             implement qTest
@@ -41,23 +41,28 @@ Current TODOs
         Windows:
             Until we can get our own development environment set up on a Windows PC we'll need to put a pin in this
             This is obviously a bad idea
-    qFile as file wrapper and handler
+    qFile as file wrapper and handler [Devan]
         hanle opening and closing of all files
         organize files into a folder system
         handle IO functions
         Implemnt unit testing
-    Rebuild qMesh and qOpenGL to be more modular
-        use qFile to handle file interactions
-        improve modularity using c preprocessor
-        export as one module which can be easily used in place of another
-    Modularize screen and rendering
-        unsure yet how to proceed, will need time to experiment and ideas
-
-    IDEAS BOARD
         File Interpreter as a seperate module which can be called as a function
             .obj .stl .amf .fbx .gltf .usd/usdz .blend (hypothetically)
             users would include these in a folder within qFile. we could then easily automate the inclusion of these
                 and the install process through the asset store and github
+    File system and user interface [Courage] 
+        Organize all project files into a folder system
+        Design a file type that will allow us to read what parts go where for a project
+        Design a usable and modular interface 
+    Rebuild qMesh and qOpenGL to be more modular [FOR GRABS]
+        use qFile to handle file interactions
+        remove dependency on c preprocessor...
+        export as one module which can be easily used in place of another
+        Will need node shader editor
+    Modularize screen and rendering [FOR GRABS]
+        unsure yet how to proceed, will need time to experiment and ideas
+
+    IDEAS BOARD
         Handling objects as a set of files instead of one continuous file
             saves us from having to design our own file design
             users could specify using our own file design later when we actually have one
